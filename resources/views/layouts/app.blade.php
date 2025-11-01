@@ -88,6 +88,13 @@
             <span class="text-lg">📍</span>
             <span>Lokasi</span>
           </a>
+          <form action="{{ route('logout') }}" method="POST" class="p-4 border-t border-green-600">
+            @csrf
+            <button type="submit" 
+                class="w-full bg-red-600 py-2 rounded hover:bg-red-700 transition">
+                Logout
+            </button>
+        </form>
         </nav>
       </aside>
 
@@ -122,6 +129,14 @@
             <span class="text-lg">📍</span>
             <span>Lokasi</span>
           </a>
+
+          <form action="{{ route('logout') }}" method="POST" class="p-4 border-t border-green-600">
+            @csrf
+            <button type="submit" 
+                class="w-full bg-red-600 py-2 rounded hover:bg-red-700 transition">
+                Logout
+            </button>
+        </form>
         </nav>
       </div>
 
