@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\StokRoti;
+use App\Models\Store; // Tambahkan ini agar bisa akses tabel stores
 
 class SalesController extends Controller
 {
@@ -23,7 +24,9 @@ class SalesController extends Controller
     /** 📍 Lokasi Toko */
     public function lokasi()
     {
-        return view('sales.lokasi_toko');
+        // Ambil semua data toko dari tabel stores
+        $stores = Store::all();
+        return view('sales.lokasi_toko', compact('stores'));
     }
 
     /** 📦 Form Input Stok Roti */
@@ -55,5 +58,24 @@ class SalesController extends Controller
         ]);
 
         return redirect()->route('sales.input')->with('success', 'Data stok roti berhasil disimpan!');
+    }
+
+    /* ===============================
+       📍 Update Lokasi Toko
+    =============================== */
+    public function updateLokasi(Request $request, $id)
+    {
+        $request->validate([
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+        ]);
+
+        $store = Store::findOrFail($id);
+        $store->update([
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+        ]);
+
+        return redirect()->back()->with('success', 'Lokasi toko berhasil diperbarui!');
     }
 }
