@@ -27,10 +27,10 @@ class SalesController extends Controller
     }
 
     /** 📦 Form Input Stok Roti */
-    public function create()
-    {
-        return view('sales.input_stok');
-    }
+    // public function create()
+    // {
+    //     return view('sales.input_stok');
+    // }
 
     /** 💾 Simpan Stok Roti */
     public function storeStok(Request $request)
