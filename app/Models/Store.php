@@ -7,15 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Store extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
-        'name',
-        'phone',
-        'owner_name',
-        'address',
-        'join_date',
-        'photo',
-        'sales_id',
+        'name', 'phone', 'owner_name', 'address', 
+        'join_date', 'photo', 'sales_id', 
+        'latitude', 'longitude'
     ];
 }
+
+?>
