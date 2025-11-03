@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SalesController;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,7 +37,7 @@ Route::middleware(['auth', 'role:sales'])->group(function () {
     Route::get('/sales/lokasi', [SalesController::class, 'lokasi'])->name('sales.lokasi'); 
     Route::get('/sales/daftartoko', [SalesController::class, 'daftarToko'])->name('sales.daftartoko');
     Route::get('/sales/tambah', [SalesController::class, 'tambahToko'])->name('sales.tambahtoko');
+
+    // Tambahan untuk update lokasi toko
+    Route::post('/sales/update-lokasi/{id}', [SalesController::class, 'updateLokasi'])->name('sales.updateLokasi');
 });
-
-
-

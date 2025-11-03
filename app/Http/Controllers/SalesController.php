@@ -5,14 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\StokRoti;
+use App\Models\Store; // Tambahkan ini agar bisa akses tabel stores
 
 class SalesController extends Controller
 {
+    /* ===============================
+       🏠 Halaman Home
+    =============================== */
     public function home()
     {
         return view('sales.home');
     }
 
+    /* ===============================
+       🍞 Input & Simpan Stok Roti
+    =============================== */
     public function create()
     {
         return view('sales.input_stok');
@@ -43,25 +50,58 @@ class SalesController extends Controller
         return redirect()->route('sales.input')->with('success', 'Data stok roti berhasil disimpan!');
     }
 
-
-    
-     public function histori()
+    /* ===============================
+       📜 Halaman Histori Stok
+    =============================== */
+    public function histori()
     {
         return view('sales.histori');
     }
 
+    /* ===============================
+       🗺️ Halaman Lokasi Toko (Leaflet)
+    =============================== */
     public function lokasi()
     {
-        return view('sales.lokasi_toko');
+        // Ambil semua data toko dari tabel stores
+        $stores = Store::all();
+        return view('sales.lokasi_toko', compact('stores'));
     }
 
+    /* ===============================
+       🧾 Daftar Toko
+    =============================== */
     public function daftarToko()
     {
-        return view('sales.daftar_toko');
+        // Ambil semua data toko dari tabel stores
+        $stores = Store::all();
+        return view('sales.daftar_toko', compact('stores'));
     }
 
+    /* ===============================
+       ➕ Tambah Toko
+    =============================== */
     public function tambahToko()
     {
         return view('sales.tambah_toko');
+    }
+
+    /* ===============================
+       📍 Update Lokasi Toko
+    =============================== */
+    public function updateLokasi(Request $request, $id)
+    {
+        $request->validate([
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+        ]);
+
+        $store = Store::findOrFail($id);
+        $store->update([
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+        ]);
+
+        return redirect()->back()->with('success', 'Lokasi toko berhasil diperbarui!');
     }
 }
