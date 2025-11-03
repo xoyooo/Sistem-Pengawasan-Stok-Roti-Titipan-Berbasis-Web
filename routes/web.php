@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\StoreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,14 +31,14 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // 🧾 Sales routes
 Route::middleware(['auth', 'role:sales'])->group(function () {
     Route::get('/sales/home', [SalesController::class, 'home'])->name('sales.home');
-    Route::get('/sales/input-stok', [SalesController::class, 'create'])->name('sales.input');
-    Route::post('/sales/input-stok', [SalesController::class, 'store'])->name('sales.store');
-
     Route::get('/sales/histori', [SalesController::class, 'histori'])->name('sales.histori');
-    Route::get('/sales/lokasi', [SalesController::class, 'lokasi'])->name('sales.lokasi'); 
-    Route::get('/sales/daftartoko', [SalesController::class, 'daftarToko'])->name('sales.daftartoko');
-    Route::get('/sales/tambah', [SalesController::class, 'tambahToko'])->name('sales.tambahtoko');
+    Route::get('/sales/lokasi', [SalesController::class, 'lokasi'])->name('sales.lokasi');
+    Route::get('/sales/input-stok', [SalesController::class, 'create'])->name('sales.input');
+    Route::post('/sales/input-stok', [SalesController::class, 'storeStok'])->name('sales.stok.store');
 
-    // Tambahan untuk update lokasi toko
-    Route::post('/sales/update-lokasi/{id}', [SalesController::class, 'updateLokasi'])->name('sales.updateLokasi');
+    // CRUD TOKO
+    Route::get('/sales/daftartoko', [StoreController::class, 'index'])->name('sales.daftartoko');
+    Route::get('/sales/tambah', [StoreController::class, 'create'])->name('sales.tambahtoko');
+    Route::post('/sales/tambah', [StoreController::class, 'store'])->name('sales.store');
+    Route::delete('/sales/toko/{id}', [StoreController::class, 'destroy'])->name('sales.toko.destroy');
 });

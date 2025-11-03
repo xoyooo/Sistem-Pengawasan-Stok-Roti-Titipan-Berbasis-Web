@@ -9,7 +9,6 @@
 </head>
 <body class="flex justify-center items-center min-h-screen bg-gray-100 p-4">
 
-```
 <!-- Card Container -->
 <div class="bg-white w-full max-w-2xl rounded-2xl shadow-lg flex flex-col md:flex-row overflow-hidden">
     <!-- Left Side -->
@@ -46,7 +45,6 @@
         </form>
     </div>
 </div>
-```
 
 </body>
 </html>
