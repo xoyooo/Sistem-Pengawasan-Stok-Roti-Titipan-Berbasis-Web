@@ -150,6 +150,8 @@
     </div>
   </div>
 
+  @yield('scripts')
+
   <script>
     // Burger menu toggle
     document.getElementById('burger')?.addEventListener('click', function() {

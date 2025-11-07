@@ -8,7 +8,7 @@
     <a href="{{ route('sales.input') }}" class="bg-green-500 text-white font-semibold text-center p-8 rounded-lg hover:bg-green-600 transition">
         Input Stok Roti
     </a>
-    <a href="{{ route('sales.lokasi') }}" class="bg-green-500 text-white font-semibold text-center p-8 rounded-lg hover:bg-green-600 transition">
+    <a href="{{ route('sales.daftartoko') }}" class="bg-green-500 text-white font-semibold text-center p-8 rounded-lg hover:bg-green-600 transition">
         Lihat Daftar Toko
     </a>
 </div>

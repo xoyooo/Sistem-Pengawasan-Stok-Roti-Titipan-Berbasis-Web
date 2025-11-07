@@ -22,55 +22,74 @@ class StoreController extends Controller
         return view('sales.tambah_toko');
     }
 
-    /** 💾 Simpan toko baru */
-    public function store(Request $request)
-{
-    try {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|numeric',
-            'owner_name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'join_date' => 'required|date',
-            'photo.*' => 'required|image|mimes:jpg,jpeg,png|max:5120', // ubah ke photo.*
-        ]);
+    /** ❌ Hapus toko */
+    public function destroy($id)
+    {
+        try {
+            $store = Store::findOrFail($id);
+            $store->delete();
 
-        $paths = [];
-        if ($request->hasFile('photo')) {
-            foreach ($request->file('photo') as $file) {
-                $paths[] = $file->store('foto_toko', 'public');
-            }
+            return redirect()->route('sales.daftartoko')->with('success', 'Toko berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menghapus toko: ' . $e->getMessage());
         }
-
-        Store::create([
-            'name' => $validated['name'],
-            'phone' => $validated['phone'],
-            'owner_name' => $validated['owner_name'],
-            'address' => $validated['address'],
-            'join_date' => $validated['join_date'],
-            'photo' => json_encode($paths), // simpan array foto jadi JSON
-            'sales_id' => Auth::id(),
-        ]);
-
-        if ($request->expectsJson()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Data toko berhasil disimpan!',
-            ]);
-        }
-
-        return redirect()
-            ->route('sales.daftartoko')
-            ->with('success', 'Data toko berhasil disimpan!');
-    } catch (\Exception $e) {
-        if ($request->expectsJson()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal menyimpan data toko: ' . $e->getMessage(),
-            ]);
-        }
-
-        return back()->with('error', 'Gagal menyimpan data toko: ' . $e->getMessage());
     }
-}
+
+    /** 💾 Simpan toko baru (termasuk koordinat peta) */
+    public function store(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'phone' => 'required|numeric',
+                'owner_name' => 'required|string|max:255',
+                'address' => 'required|string|max:255',
+                'join_date' => 'required|date',
+                'latitude' => 'nullable|numeric|between:-90,90',
+                'longitude' => 'nullable|numeric|between:-180,180',
+                'photo.*' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+            ]);
+
+            $paths = [];
+            if ($request->hasFile('photo')) {
+                foreach ($request->file('photo') as $file) {
+                    $paths[] = $file->store('foto_toko', 'public');
+                }
+            }
+
+            Store::create([
+                'name' => $validated['name'],
+                'phone' => $validated['phone'],
+                'owner_name' => $validated['owner_name'],
+                'address' => $validated['address'],
+                'join_date' => $validated['join_date'],
+                'latitude' => $validated['latitude'] ?? null,
+                'longitude' => $validated['longitude'] ?? null,
+                'photo' => json_encode($paths),
+                'sales_id' => Auth::id(),
+            ]);
+
+            // Jika permintaan AJAX (fetch/axios/jquery)
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data toko dan lokasi berhasil disimpan!',
+                ]);
+            }
+
+            // Jika permintaan biasa (non-AJAX)
+            return redirect()
+                ->route('sales.daftartoko')
+                ->with('success', 'Data toko dan lokasi berhasil disimpan!');
+        } catch (\Exception $e) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal menyimpan data toko: ' . $e->getMessage(),
+                ]);
+            }
+
+            return back()->with('error', 'Gagal menyimpan data toko: ' . $e->getMessage());
+        }
+    }
 }
