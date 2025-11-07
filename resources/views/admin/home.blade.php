@@ -1,2 +1,6 @@
-<h1>Selamat datang, Admin!</h1>
-<p>Anda memiliki akses penuh.</p>
+@extends('layouts.admin')
+
+
+@section('content')
+    {{-- konten admin kamu di sini --}}
+@endsection

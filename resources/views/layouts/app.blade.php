@@ -86,7 +86,7 @@
 
           <a href="{{ route('sales.lokasi') }}" class="flex items-center gap-3 px-3 py-2 md:py-3 rounded-lg text-sm md:text-base transition-colors {{ request()->routeIs('sales.lokasi') ? 'nav-active' : 'text-gray-700 hover:bg-white/50' }}">
             <span class="text-lg">📍</span>
-            <span>Lokasi</span>
+            <span>Lokasi Toko</span>
           </a>
           <form action="{{ route('logout') }}" method="POST" class="p-4 border-t border-green-600">
             @csrf
@@ -109,25 +109,30 @@
             <span class="text-lg">🏠</span>
             <span>Home</span>
           </a>
+
           <a href="{{ route('sales.histori') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('sales.histori') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
             <span class="text-lg">📜</span>
             <span>Histori</span>
           </a>
+
           <a href="{{ route('sales.daftartoko') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('sales.daftartoko') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
             <span class="text-lg">🏪</span>
             <span>Daftar Toko</span>
           </a>
+
           <a href="{{ route('sales.tambahtoko') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('sales.tambahtoko') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
             <span class="text-lg">➕</span>
             <span>Tambah Toko</span>
           </a>
+
           <a href="{{ route('sales.input') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('sales.input') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
             <span class="text-lg">✏️</span>
             <span>Input Stok</span>
           </a>
+          
           <a href="{{ route('sales.lokasi') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('sales.lokasi') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
             <span class="text-lg">📍</span>
-            <span>Lokasi</span>
+            <span>Lokasi Toko</span>
           </a>
 
           <form action="{{ route('logout') }}" method="POST" class="p-4 border-t border-green-600">

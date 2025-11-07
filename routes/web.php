@@ -4,41 +4,72 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\StoreController;
+use App\Http\Controllers\AdminController; // tidak perlu folder "Admin" karena file-nya di root
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Halaman Awal dan Auth
 |--------------------------------------------------------------------------
 */
+Route::get('/', fn () => view('welcome'));
 
-// 🏠 Halaman awal
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// 🔐 Login & Logout
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::get('/login',  [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// 👑 Admin routes
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/home', function () {
-        return view('admin.home');
-    })->name('admin.home');
-});
+/*
+|--------------------------------------------------------------------------
+| Rute Admin
+| Layout: resources/views/layouts/admin.blade.php
+| Views : resources/views/admin/...
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-// 🧾 Sales routes
-Route::middleware(['auth', 'role:sales'])->group(function () {
-    Route::get('/sales/home', [SalesController::class, 'home'])->name('sales.home');
-    Route::get('/sales/histori', [SalesController::class, 'histori'])->name('sales.histori');
-    Route::get('/sales/lokasi', [SalesController::class, 'lokasi'])->name('sales.lokasi');
-    Route::get('/sales/input-stok', [SalesController::class, 'create'])->name('sales.input');
-    Route::post('/sales/input-stok', [SalesController::class, 'storeStok'])->name('sales.stok.store');
+        // Halaman utama
+        Route::get('/home', [AdminController::class, 'home'])->name('home');
 
-    // CRUD TOKO
-    Route::get('/sales/daftartoko', [StoreController::class, 'index'])->name('sales.daftartoko');
-    Route::get('/sales/tambah', [StoreController::class, 'create'])->name('sales.tambahtoko');
-    Route::post('/sales/tambah', [StoreController::class, 'store'])->name('sales.store');
-    Route::delete('/sales/toko/{id}', [StoreController::class, 'destroy'])->name('sales.toko.destroy');
-});
+        // Manajemen Sales
+        Route::get('/sales', [AdminController::class, 'sales'])->name('sales');
+        Route::post('/sales/tambah', [AdminController::class, 'tambahSales'])->name('sales.tambah');
+        Route::delete('/sales/{id}', [AdminController::class, 'hapusSales'])->name('sales.hapus');
+
+        // Daftar toko
+        Route::get('/daftar-toko', [AdminController::class, 'daftarToko'])->name('daftartoko');
+
+        // Lokasi toko
+        Route::get('/lokasi-toko', [AdminController::class, 'lokasiToko'])->name('lokasitoko');
+
+        // Histori
+        Route::get('/histori', [AdminController::class, 'histori'])->name('histori');
+    });
+
+/*
+|--------------------------------------------------------------------------
+| Rute Sales
+| Layout: resources/views/layouts/app.blade.php
+| Views : resources/views/sales/...
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:sales'])
+    ->prefix('sales')
+    ->name('sales.')
+    ->group(function () {
+
+        Route::get('/home', [SalesController::class, 'home'])->name('home');
+        Route::get('/histori', [SalesController::class, 'histori'])->name('histori');
+        Route::get('/lokasi', [SalesController::class, 'lokasi'])->name('lokasi');
+
+        // Input stok roti
+        Route::get('/input-stok', [SalesController::class, 'create'])->name('input');
+        Route::post('/input-stok', [SalesController::class, 'storeStok'])->name('stok.store');
+
+        // CRUD Toko
+        Route::get('/daftar-toko', [StoreController::class, 'index'])->name('daftartoko');
+        Route::get('/tambah-toko', [StoreController::class, 'create'])->name('tambahtoko');
+        Route::post('/tambah-toko', [StoreController::class, 'store'])->name('store');
+        Route::delete('/toko/{id}', [StoreController::class, 'destroy'])->name('toko.destroy');
+    });
