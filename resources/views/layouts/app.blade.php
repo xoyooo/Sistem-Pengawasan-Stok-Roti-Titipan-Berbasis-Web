@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@yield('title', 'Sales - App')</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>@yield('title', 'Sales - App')</title>
 
-    <!-- Tailwind via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-          crossorigin="anonymous"
-          referrerpolicy="no-referrer" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
 </head>
 
 <body class="min-h-screen">
@@ -49,19 +48,24 @@
         <a href="{{ route('sales.home') }}" class="nav-link {{ request()->routeIs('sales.home') ? 'nav-active' : '' }}">
           <i class="fa-solid fa-house"></i> <span>Beranda</span>
         </a>
-        <a href="{{ route('sales.histori') }}" class="nav-link {{ request()->routeIs('sales.histori') ? 'nav-active' : '' }}">
+        <a href="{{ route('sales.histori') }}"
+          class="nav-link {{ request()->routeIs('sales.histori') ? 'nav-active' : '' }}">
           <i class="fa-solid fa-clock-rotate-left"></i> <span>Histori</span>
         </a>
-        <a href="{{ route('sales.daftartoko') }}" class="nav-link {{ request()->routeIs('sales.daftartoko') ? 'nav-active' : '' }}">
+        <a href="{{ route('sales.daftartoko') }}"
+          class="nav-link {{ request()->routeIs('sales.daftartoko') ? 'nav-active' : '' }}">
           <i class="fa-solid fa-store"></i> <span>Daftar Toko</span>
         </a>
-        <a href="{{ route('sales.tambahtoko') }}" class="nav-link {{ request()->routeIs('sales.tambahtoko') ? 'nav-active' : '' }}">
+        <a href="{{ route('sales.tambahtoko') }}"
+          class="nav-link {{ request()->routeIs('sales.tambahtoko') ? 'nav-active' : '' }}">
           <i class="fa-solid fa-plus"></i> <span>Tambah Toko</span>
         </a>
-        <a href="{{ route('sales.input') }}" class="nav-link {{ request()->routeIs('sales.input') ? 'nav-active' : '' }}">
+        <a href="{{ route('sales.input') }}"
+          class="nav-link {{ request()->routeIs('sales.input') ? 'nav-active' : '' }}">
           <i class="fa-solid fa-pen-to-square"></i> <span>Input Stok</span>
         </a>
-        <a href="{{ route('sales.lokasi') }}" class="nav-link {{ request()->routeIs('sales.lokasi') ? 'nav-active' : '' }}">
+        <a href="{{ route('sales.lokasi') }}"
+          class="nav-link {{ request()->routeIs('sales.lokasi') ? 'nav-active' : '' }}">
           <i class="fa-solid fa-location-dot"></i> <span>Lokasi Toko</span>
         </a>
 
@@ -85,22 +89,28 @@
         </div>
 
         <nav class="p-3 flex-1">
-          <a href="{{ route('sales.home') }}" class="nav-link {{ request()->routeIs('sales.home') ? 'nav-active' : '' }}">
+          <a href="{{ route('sales.home') }}"
+            class="nav-link {{ request()->routeIs('sales.home') ? 'nav-active' : '' }}">
             <i class="fa-solid fa-house"></i> Beranda
           </a>
-          <a href="{{ route('sales.histori') }}" class="nav-link {{ request()->routeIs('sales.histori') ? 'nav-active' : '' }}">
+          <a href="{{ route('sales.histori') }}"
+            class="nav-link {{ request()->routeIs('sales.histori') ? 'nav-active' : '' }}">
             <i class="fa-solid fa-clock-rotate-left"></i> Histori
           </a>
-          <a href="{{ route('sales.daftartoko') }}" class="nav-link {{ request()->routeIs('sales.daftartoko') ? 'nav-active' : '' }}">
+          <a href="{{ route('sales.daftartoko') }}"
+            class="nav-link {{ request()->routeIs('sales.daftartoko') ? 'nav-active' : '' }}">
             <i class="fa-solid fa-store"></i> Daftar Toko
           </a>
-          <a href="{{ route('sales.tambahtoko') }}" class="nav-link {{ request()->routeIs('sales.tambahtoko') ? 'nav-active' : '' }}">
+          <a href="{{ route('sales.tambahtoko') }}"
+            class="nav-link {{ request()->routeIs('sales.tambahtoko') ? 'nav-active' : '' }}">
             <i class="fa-solid fa-plus"></i> Tambah Toko
           </a>
-          <a href="{{ route('sales.input') }}" class="nav-link {{ request()->routeIs('sales.input') ? 'nav-active' : '' }}">
+          <a href="{{ route('sales.input') }}"
+            class="nav-link {{ request()->routeIs('sales.input') ? 'nav-active' : '' }}">
             <i class="fa-solid fa-pen-to-square"></i> Input Stok
           </a>
-          <a href="{{ route('sales.lokasi') }}" class="nav-link {{ request()->routeIs('sales.lokasi') ? 'nav-active' : '' }}">
+          <a href="{{ route('sales.lokasi') }}"
+            class="nav-link {{ request()->routeIs('sales.lokasi') ? 'nav-active' : '' }}">
             <i class="fa-solid fa-location-dot"></i> Lokasi Toko
           </a>
 
@@ -117,7 +127,7 @@
     </div>
 
     <!-- CONTENT -->
-    <main class="flex-1 overflow-auto p-3 md:p-6">
+    <main class="flex-1 overflow-auto p-3 md:p-6 bg-gray-100">
       <div class="max-w-6xl mx-auto">
         @yield('content')
       </div>
@@ -125,10 +135,11 @@
   </div>
 
 
-@yield('scripts')
+  @yield('scripts')
 
   <!-- Custom JS -->
   <script src="{{ asset('js/layout.js') }}"></script>
 
 </body>
+
 </html>

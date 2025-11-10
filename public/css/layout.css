@@ -6,7 +6,7 @@
 
       /* === SIDEBAR DESKTOP === */
       #sidebar {
-        border-right: 1px solid #fcd34d;
+        border-right: 1px solid #fcd34d ;
         width: 260px;
         height: 100vh;
         position: fixed;
