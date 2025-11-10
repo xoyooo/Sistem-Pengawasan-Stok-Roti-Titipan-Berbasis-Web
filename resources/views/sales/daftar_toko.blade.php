@@ -7,7 +7,7 @@
     <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-800 mb-4 sm:mb-0">Daftar Toko</h1>
         <a href="{{ route('sales.tambahtoko') }}"
-           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">
+           class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg shadow transition">
            + Tambah Toko
         </a>
     </div>

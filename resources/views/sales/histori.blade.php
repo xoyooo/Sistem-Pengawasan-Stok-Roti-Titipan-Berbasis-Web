@@ -35,7 +35,6 @@
                                 @else
                                     <span class="text-gray-400">-</span>
                                 @endif
-
                             </td>
                             <td class="px-4 py-3">
                                 {{-- Foto Sisa --}}

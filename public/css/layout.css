@@ -1,0 +1,172 @@
+      /* === WARNA & DASAR === */
+      body { background-color: #fffbea; color: #1f2937; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+      .sidebar-header { background-color: #fde047; }
+      .sidebar-bg { background-color: #ffffff; }
+      .nav-active { background: linear-gradient(90deg, #fde047 0%, #fff 100%); font-weight: 600; color: #000; }
+
+      /* === SIDEBAR DESKTOP === */
+      #sidebar {
+        border-right: 1px solid #fcd34d;
+        width: 260px;
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        z-index: 50;
+      }
+
+      /* === SIDEBAR MOBILE === */
+      #mobile-sidebar {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(3px);
+        z-index: 2000;
+        display: none;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+      }
+
+      #mobile-sidebar.open {
+        display: flex;
+        opacity: 1;
+        pointer-events: auto;
+        animation: fadeIn 0.4s ease forwards;
+      }
+
+      #mobile-sidebar.closing {
+        animation: fadeOut 0.35s ease forwards;
+        pointer-events: none;
+      }
+
+      #mobile-sidebar .panel {
+        width: 240px;
+        height: 100%;
+        background: white;
+        transform: translateX(-100%);
+        transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+        display: flex;
+        flex-direction: column;
+        border-right: 2px solid #fde047;
+        box-shadow: 3px 0 8px rgba(0, 0, 0, 0.15);
+        opacity: 0;
+      }
+
+      #mobile-sidebar.open .panel {
+        transform: translateX(0);
+        opacity: 1;
+        animation: slideIn 0.35s ease forwards;
+      }
+
+      #mobile-sidebar.closing .panel {
+        transform: translateX(-100%);
+        opacity: 0;
+        animation: slideOut 0.35s ease forwards;
+      }
+
+      /* === MENU LINK === */
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 16px;
+        margin: 4px 10px;
+        border-radius: 8px;
+        font-weight: 500;
+        color: #374151;
+        transition: all 0.25s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-link:hover {
+        background: linear-gradient(90deg, #fde047, #fff);
+        color: #111827;
+        transform: translateX(3px);
+      }
+
+      /* === LOGOUT BUTTON === */
+      .logout-btn {
+        background: #ef4444;
+        color: white;
+        width: calc(100% - 24px);
+        margin: 14px auto;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: 0.25s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .logout-btn:hover {
+        background: #dc2626;
+        transform: translateY(-2px);
+      }
+
+      /* === MAIN CONTENT === */
+      main {
+        margin-left: 260px;
+        padding: 1.5rem;
+        min-height: 100vh;
+        background: #fffcf0;
+        transition: all 0.3s ease;
+      }
+
+      /* === HEADER MOBILE === */
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #fde047;
+        padding: 0.75rem 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      /* === RESPONSIVE === */
+      @media (max-width: 768px) {
+        #sidebar { display: none; }
+        main { margin-left: 0; }
+      }
+
+      /* === LEAFLET FIX === */
+      #mobile-sidebar.open ~ .leaflet-control-container {
+        z-index: 0 !important;
+        pointer-events: none !important;
+        opacity: 0.3;
+      }
+
+      #mobile-sidebar:not(.open) ~ .leaflet-control-container {
+        z-index: 1000 !important;
+        pointer-events: auto !important;
+        opacity: 1;
+      }
+
+      /* === ANIMASI KEYFRAMES === */
+      @keyframes slideIn {
+        from { transform: translateX(-100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+
+      @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(-100%); opacity: 0; }
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }

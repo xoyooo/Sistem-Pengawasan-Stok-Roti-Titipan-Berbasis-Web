@@ -8,169 +8,127 @@
     <!-- Tailwind via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <style>
-      /* Color & styling variables */
-      .app-bg { background-color: #f3f4f6; }
-      .sidebar-bg { background-color: #eef2f6; }
-      .brand-green { background-color: #4CAF50; }
-      .card-white { background: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-      .nav-active { background-color: #4CAF50; color: white; }
-      
-      /* Smooth transitions */
-      .sidebar-transition { transition: transform 0.3s ease-in-out; }
-      
-      /* Mobile sidebar positioning */
-      #mobile-sidebar.hidden { display: none; }
-      #mobile-sidebar:not(.hidden) { display: block; }
-    </style>
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
 </head>
-<body class="app-bg min-h-screen">
+
+<body class="min-h-screen">
+
+  <!-- HEADER MOBILE -->
+  <header class="md:hidden">
+    <div class="flex items-center gap-2">
+      <button id="burger" class="p-2 bg-white/40 rounded-md hover:bg-white/60 transition">
+        <i class="fa-solid fa-bars text-gray-800"></i>
+      </button>
+      <div>
+        <h1 class="font-bold text-base">Toko Roti Akbar</h1>
+        <p class="text-xs uppercase tracking-widest">Sales</p>
+      </div>
+    </div>
+    <div class="bg-yellow-100 p-2 rounded-full">
+      <i class="fa-solid fa-user text-gray-700"></i>
+    </div>
+  </header>
 
   <div class="flex flex-col h-screen">
 
-    <!-- HEADER - Full width at top -->
-    <header class="brand-green text-white px-4 md:px-8 py-6 md:py-8 flex items-center justify-between sticky top-0 z-50 shadow-lg">
-      <div class="flex items-center gap-3 md:gap-4">
-        <!-- Burger menu mobile -->
-        <button id="burger" class="md:hidden p-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-          </svg>
-        </button>
-
-        <!-- Logo text on left -->
-        <span class="text-lg md:text-2xl font-bold">Logo</span>
+    <!-- SIDEBAR DESKTOP -->
+    <aside id="sidebar" class="sidebar-bg">
+      <div class="sidebar-header text-center py-5 border-b border-yellow-300 shadow-sm">
+        <h1 class="font-bold text-lg text-gray-900">Toko Roti Akbar</h1>
+        <p class="text-xs tracking-widest text-gray-700">SALES</p>
       </div>
 
-      <!-- Sales text on right -->
-      <span class="text-lg md:text-2xl font-semibold">Sales</span>
-    </header>
+      <nav class="flex-1 mt-3">
+        <a href="{{ route('sales.home') }}" class="nav-link {{ request()->routeIs('sales.home') ? 'nav-active' : '' }}">
+          <i class="fa-solid fa-house"></i> <span>Beranda</span>
+        </a>
+        <a href="{{ route('sales.histori') }}" class="nav-link {{ request()->routeIs('sales.histori') ? 'nav-active' : '' }}">
+          <i class="fa-solid fa-clock-rotate-left"></i> <span>Histori</span>
+        </a>
+        <a href="{{ route('sales.daftartoko') }}" class="nav-link {{ request()->routeIs('sales.daftartoko') ? 'nav-active' : '' }}">
+          <i class="fa-solid fa-store"></i> <span>Daftar Toko</span>
+        </a>
+        <a href="{{ route('sales.tambahtoko') }}" class="nav-link {{ request()->routeIs('sales.tambahtoko') ? 'nav-active' : '' }}">
+          <i class="fa-solid fa-plus"></i> <span>Tambah Toko</span>
+        </a>
+        <a href="{{ route('sales.input') }}" class="nav-link {{ request()->routeIs('sales.input') ? 'nav-active' : '' }}">
+          <i class="fa-solid fa-pen-to-square"></i> <span>Input Stok</span>
+        </a>
+        <a href="{{ route('sales.lokasi') }}" class="nav-link {{ request()->routeIs('sales.lokasi') ? 'nav-active' : '' }}">
+          <i class="fa-solid fa-location-dot"></i> <span>Lokasi Toko</span>
+        </a>
 
-    <!-- Main container with sidebar and content side by side -->
-    <div class="flex flex-1 overflow-hidden">
+        <form action="{{ route('logout') }}" method="POST" class="mt-auto mb-4 text-center">
+          @csrf
+          <button type="submit" class="logout-btn">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+          </button>
+        </form>
+      </nav>
+    </aside>
 
-      <!-- SIDEBAR (desktop only) -->
-      <aside id="sidebar" class="sidebar-bg w-full md:w-64 p-4 md:p-6 hidden md:flex md:flex-col border-r border-gray-300 overflow-y-auto">
-        <div class="mb-6 pb-4 border-b border-gray-300">
-          <h2 class="text-lg md:text-xl font-bold text-gray-800">Menu</h2>
+    <!-- SIDEBAR MOBILE -->
+    <div id="mobile-sidebar">
+      <div class="panel">
+        <div class="flex justify-between items-center p-4 border-b border-yellow-300 bg-yellow-50">
+          <h2 class="font-bold text-gray-800 text-lg">Menu</h2>
+          <button id="closeSidebar" class="text-gray-700 text-xl">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </div>
 
-        <nav class="space-y-1 md:space-y-2 flex-1">
-          <a href="{{ route('sales.home') }}" class="flex items-center gap-3 px-3 py-2 md:py-3 rounded-lg text-sm md:text-base transition-colors {{ request()->routeIs('sales.home') ? 'nav-active' : 'text-gray-700 hover:bg-white/50' }}">
-            <span class="text-lg">🏠</span>
-            <span>Home</span>
+        <nav class="p-3 flex-1">
+          <a href="{{ route('sales.home') }}" class="nav-link {{ request()->routeIs('sales.home') ? 'nav-active' : '' }}">
+            <i class="fa-solid fa-house"></i> Beranda
+          </a>
+          <a href="{{ route('sales.histori') }}" class="nav-link {{ request()->routeIs('sales.histori') ? 'nav-active' : '' }}">
+            <i class="fa-solid fa-clock-rotate-left"></i> Histori
+          </a>
+          <a href="{{ route('sales.daftartoko') }}" class="nav-link {{ request()->routeIs('sales.daftartoko') ? 'nav-active' : '' }}">
+            <i class="fa-solid fa-store"></i> Daftar Toko
+          </a>
+          <a href="{{ route('sales.tambahtoko') }}" class="nav-link {{ request()->routeIs('sales.tambahtoko') ? 'nav-active' : '' }}">
+            <i class="fa-solid fa-plus"></i> Tambah Toko
+          </a>
+          <a href="{{ route('sales.input') }}" class="nav-link {{ request()->routeIs('sales.input') ? 'nav-active' : '' }}">
+            <i class="fa-solid fa-pen-to-square"></i> Input Stok
+          </a>
+          <a href="{{ route('sales.lokasi') }}" class="nav-link {{ request()->routeIs('sales.lokasi') ? 'nav-active' : '' }}">
+            <i class="fa-solid fa-location-dot"></i> Lokasi Toko
           </a>
 
-          <a href="{{ route('sales.histori') }}" class="flex items-center gap-3 px-3 py-2 md:py-3 rounded-lg text-sm md:text-base transition-colors {{ request()->routeIs('sales.histori') ? 'nav-active' : 'text-gray-700 hover:bg-white/50' }}">
-            <span class="text-lg">📜</span>
-            <span>Histori</span>
-          </a>
-
-          <a href="{{ route('sales.daftartoko') }}" class="flex items-center gap-3 px-3 py-2 md:py-3 rounded-lg text-sm md:text-base transition-colors {{ request()->routeIs('sales.daftartoko') ? 'nav-active' : 'text-gray-700 hover:bg-white/50' }}">
-            <span class="text-lg">🏪</span>
-            <span>Daftar Toko</span>
-          </a>
-
-          <a href="{{ route('sales.tambahtoko') }}" class="flex items-center gap-3 px-3 py-2 md:py-3 rounded-lg text-sm md:text-base transition-colors {{ request()->routeIs('sales.tambahtoko') ? 'nav-active' : 'text-gray-700 hover:bg-white/50' }}">
-            <span class="text-lg">➕</span>
-            <span>Tambah Toko</span>
-          </a>
-
-          <a href="{{ route('sales.input') }}" class="flex items-center gap-3 px-3 py-2 md:py-3 rounded-lg text-sm md:text-base transition-colors {{ request()->routeIs('sales.input') ? 'nav-active' : 'text-gray-700 hover:bg-white/50' }}">
-            <span class="text-lg">✏️</span>
-            <span>Input Stok</span>
-          </a>
-
-          <a href="{{ route('sales.lokasi') }}" class="flex items-center gap-3 px-3 py-2 md:py-3 rounded-lg text-sm md:text-base transition-colors {{ request()->routeIs('sales.lokasi') ? 'nav-active' : 'text-gray-700 hover:bg-white/50' }}">
-            <span class="text-lg">📍</span>
-            <span>Lokasi Toko</span>
-          </a>
-          <form action="{{ route('logout') }}" method="POST" class="p-4 border-t border-green-600">
-            @csrf
-            <button type="submit" 
-                class="w-full bg-red-600 py-2 rounded hover:bg-red-700 transition">
-                Logout
-            </button>
-        </form>
-        </nav>
-      </aside>
-
-      <!-- MOBILE SIDEBAR (collapsible) -->
-      <div id="mobile-sidebar" class="md:hidden hidden bg-white border-r border-gray-200 shadow-sm w-64 overflow-y-auto">
-        <div class="p-4 border-b border-gray-300">
-          <h2 class="text-lg font-bold text-gray-800">Logo</h2>
-        </div>
-
-        <nav class="space-y-1 p-3 md:p-4">
-          <a href="{{ route('sales.home') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('sales.home') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
-            <span class="text-lg">🏠</span>
-            <span>Home</span>
-          </a>
-
-          <a href="{{ route('sales.histori') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('sales.histori') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
-            <span class="text-lg">📜</span>
-            <span>Histori</span>
-          </a>
-
-          <a href="{{ route('sales.daftartoko') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('sales.daftartoko') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
-            <span class="text-lg">🏪</span>
-            <span>Daftar Toko</span>
-          </a>
-
-          <a href="{{ route('sales.tambahtoko') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('sales.tambahtoko') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
-            <span class="text-lg">➕</span>
-            <span>Tambah Toko</span>
-          </a>
-
-          <a href="{{ route('sales.input') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('sales.input') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
-            <span class="text-lg">✏️</span>
-            <span>Input Stok</span>
-          </a>
-          
-          <a href="{{ route('sales.lokasi') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('sales.lokasi') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
-            <span class="text-lg">📍</span>
-            <span>Lokasi Toko</span>
-          </a>
-
-          <form action="{{ route('logout') }}" method="POST" class="p-4 border-t border-green-600">
-            @csrf
-            <button type="submit" 
-                class="w-full bg-red-600 py-2 rounded hover:bg-red-700 transition">
-                Logout
-            </button>
-        </form>
+          <div class="mt-4 border-t border-yellow-200 pt-3">
+            <form action="{{ route('logout') }}" method="POST">
+              @csrf
+              <button type="submit" class="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+              </button>
+            </form>
+          </div>
         </nav>
       </div>
-
-      <!-- CONTENT AREA -->
-      <main class="flex-1 overflow-auto p-3 md:p-6">
-        <div class="max-w-6xl mx-auto">
-          @yield('content')
-        </div>
-      </main>
-
     </div>
+
+    <!-- CONTENT -->
+    <main class="flex-1 overflow-auto p-3 md:p-6">
+      <div class="max-w-6xl mx-auto">
+        @yield('content')
+      </div>
+    </main>
   </div>
 
-  @yield('scripts')
 
-  <script>
-    // Burger menu toggle
-    document.getElementById('burger')?.addEventListener('click', function() {
-      const mob = document.getElementById('mobile-sidebar');
-      if (!mob) return;
-      mob.classList.toggle('hidden');
-    });
+@yield('scripts')
 
-    // Close mobile sidebar when clicking on a link
-    document.querySelectorAll('#mobile-sidebar a').forEach(link => {
-      link.addEventListener('click', function() {
-        document.getElementById('mobile-sidebar').classList.add('hidden');
-      });
-    });
-  </script>
+  <!-- Custom JS -->
+  <script src="{{ asset('js/layout.js') }}"></script>
+
 </body>
 </html>

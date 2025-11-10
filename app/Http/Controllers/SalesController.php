@@ -12,16 +12,21 @@ use Carbon\Carbon;
 class SalesController extends Controller
 {
     /** 🏠 Halaman Home */
-    public function home()
+   public function home()
     {
-        return view('sales.home');
+    $stores = Store::whereNotNull('latitude')
+        ->whereNotNull('longitude')
+        ->get(['name', 'address', 'latitude', 'longitude']);
+
+    return view('sales.home', compact('stores'));
     }
+
 
     /** 🧾 Histori Penjualan */
     public function histori()
     {
         // Ambil sales_id dari user yang login
-        $salesId = auth()->user()->id;
+        $salesId = Auth::user()->id;
 
         // Ambil data 7 hari terakhir berdasarkan tanggal_pengantaran
         $histori = StokRoti::with('store')
@@ -45,7 +50,7 @@ class SalesController extends Controller
     public function create()
     {
         // Ambil daftar toko milik sales yang sedang login
-        $stores = \App\Models\Store::where('sales_id', auth()->id())->get();
+        $stores = \App\Models\Store::where('sales_id', Auth::id())->get();
 
         return view('sales.input_stok', compact('stores'));
     }
