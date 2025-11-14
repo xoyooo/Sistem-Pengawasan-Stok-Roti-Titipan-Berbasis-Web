@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="p-6">
-    <h1 class="text-2xl font-semibold mb-6 text-green-600">Histori Penjualan (7 Hari Terakhir)</h1>
+    <h1 class="text-2xl font-semibold mb-6 border-yellow-500">Histori Penjualan (7 Hari Terakhir)</h1>
 
     @if($histori->isEmpty())
         <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded">
@@ -11,7 +11,7 @@
     @else
         <div class="overflow-x-auto bg-white shadow rounded-lg">
             <table class="min-w-full table-auto border-collapse">
-                <thead class="bg-green-500 text-white">
+                <thead class="bg-yellow-300 text-black">
                     <tr>
                         <th class="px-4 py-3 text-left">Tanggal</th>
                         <th class="px-4 py-3 text-left">Nama Toko</th>
