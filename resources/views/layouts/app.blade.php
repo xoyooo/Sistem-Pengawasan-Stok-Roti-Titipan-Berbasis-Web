@@ -49,18 +49,29 @@
         <a href="{{ route('sales.home') }}" class="nav-link {{ request()->routeIs('sales.home') ? 'nav-active' : '' }}">
           <i class="fa-solid fa-house"></i> <span>Beranda</span>
         </a>
+
         <a href="{{ route('sales.histori') }}" class="nav-link {{ request()->routeIs('sales.histori') ? 'nav-active' : '' }}">
           <i class="fa-solid fa-clock-rotate-left"></i> <span>Histori</span>
         </a>
+
         <a href="{{ route('sales.daftartoko') }}" class="nav-link {{ request()->routeIs('sales.daftartoko') ? 'nav-active' : '' }}">
           <i class="fa-solid fa-store"></i> <span>Daftar Toko</span>
         </a>
+
         <a href="{{ route('sales.tambahtoko') }}" class="nav-link {{ request()->routeIs('sales.tambahtoko') ? 'nav-active' : '' }}">
           <i class="fa-solid fa-plus"></i> <span>Tambah Toko</span>
         </a>
+
+        <!-- ⭐ Input Sisa Roti (BARU) -->
+        <a href="{{ route('sales.sisa.create') }}"
+           class="nav-link {{ request()->routeIs('sales.sisa.create') ? 'nav-active' : '' }}">
+            <i class="fa-solid fa-bread-slice"></i> <span>Input Sisa</span>
+        </a>
+
         <a href="{{ route('sales.input') }}" class="nav-link {{ request()->routeIs('sales.input') ? 'nav-active' : '' }}">
           <i class="fa-solid fa-pen-to-square"></i> <span>Input Stok</span>
         </a>
+
         <a href="{{ route('sales.lokasi') }}" class="nav-link {{ request()->routeIs('sales.lokasi') ? 'nav-active' : '' }}">
           <i class="fa-solid fa-location-dot"></i> <span>Lokasi Toko</span>
         </a>
@@ -85,21 +96,33 @@
         </div>
 
         <nav class="p-3 flex-1">
+
           <a href="{{ route('sales.home') }}" class="nav-link {{ request()->routeIs('sales.home') ? 'nav-active' : '' }}">
             <i class="fa-solid fa-house"></i> Beranda
           </a>
+
           <a href="{{ route('sales.histori') }}" class="nav-link {{ request()->routeIs('sales.histori') ? 'nav-active' : '' }}">
             <i class="fa-solid fa-clock-rotate-left"></i> Histori
           </a>
+
           <a href="{{ route('sales.daftartoko') }}" class="nav-link {{ request()->routeIs('sales.daftartoko') ? 'nav-active' : '' }}">
             <i class="fa-solid fa-store"></i> Daftar Toko
           </a>
+
           <a href="{{ route('sales.tambahtoko') }}" class="nav-link {{ request()->routeIs('sales.tambahtoko') ? 'nav-active' : '' }}">
             <i class="fa-solid fa-plus"></i> Tambah Toko
           </a>
+
+          <!-- ⭐ Input Sisa Roti Mobile -->
+          <a href="{{ route('sales.sisa.create') }}"
+            class="nav-link {{ request()->routeIs('sales.sisa.create') ? 'nav-active' : '' }}">
+              <i class="fa-solid fa-bread-slice"></i> Input Sisa
+          </a>
+
           <a href="{{ route('sales.input') }}" class="nav-link {{ request()->routeIs('sales.input') ? 'nav-active' : '' }}">
             <i class="fa-solid fa-pen-to-square"></i> Input Stok
           </a>
+
           <a href="{{ route('sales.lokasi') }}" class="nav-link {{ request()->routeIs('sales.lokasi') ? 'nav-active' : '' }}">
             <i class="fa-solid fa-location-dot"></i> Lokasi Toko
           </a>
@@ -112,6 +135,7 @@
               </button>
             </form>
           </div>
+
         </nav>
       </div>
     </div>
@@ -122,13 +146,12 @@
         @yield('content')
       </div>
     </main>
-  </div>
 
+  </div>
 
 @yield('scripts')
 
-  <!-- Custom JS -->
-  <script src="{{ asset('js/layout.js') }}"></script>
+<script src="{{ asset('js/layout.js') }}"></script>
 
 </body>
 </html>

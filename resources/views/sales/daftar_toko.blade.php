@@ -35,9 +35,10 @@
                     <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Nama Toko</th>
                     <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Alamat</th>
                     <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">No HP</th>
-                    <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Aksi</th>
+                    <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Foto</th>
                 </tr>
             </thead>
+
             <tbody class="divide-y divide-gray-200">
                 @forelse($stores as $index => $store)
                     <tr class="hover:bg-gray-50 transition">
@@ -45,17 +46,23 @@
                         <td class="px-4 sm:px-6 py-4 text-sm text-gray-800 font-medium">{{ $store->name }}</td>
                         <td class="px-4 sm:px-6 py-4 text-sm text-gray-800">{{ $store->address }}</td>
                         <td class="px-4 sm:px-6 py-4 text-sm text-gray-800">{{ $store->phone }}</td>
-                        <td class="px-4 sm:px-6 py-4 text-sm flex space-x-2">
-                            <form action="{{ route('sales.toko.destroy', $store->id) }}" method="POST" class="delete-form">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button"
-                                        class="bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1 rounded transition delete-btn"
-                                        data-name="{{ $store->name }}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
+
+                        {{-- Foto Toko dari Storage --}}
+                       <td class="px-4 sm:px-6 py-4 text-sm">
+                            @php
+                                $photos = json_decode($store->photo, true);
+                                $firstPhoto = $photos[0] ?? null;
+                            @endphp
+
+                            @if($firstPhoto)
+                                <img src="{{ asset('storage/' . $firstPhoto) }}"
+                                    alt="Foto Toko"
+                                    class="w-20 h-20 object-cover rounded-lg shadow">
+                            @else
+                                <span class="text-gray-400">-</span>
+                            @endif
                         </td>
+
                     </tr>
                 @empty
                     <tr>
@@ -63,6 +70,7 @@
                     </tr>
                 @endforelse
             </tbody>
+
         </table>
     </div>
 </div>
