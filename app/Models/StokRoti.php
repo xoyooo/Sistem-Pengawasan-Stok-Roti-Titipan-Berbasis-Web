@@ -9,14 +9,34 @@ class StokRoti extends Model
 {
     use HasFactory;
 
+    protected $table = 'stok_rotis';
+
     protected $fillable = [
-        'user_id', 'nama_toko', 'jumlah_roti', 'jumlah_sisa',
-        'tanggal_pengantaran', 'foto_roti', 'foto_sisa'
+        'user_id',
+        'nama_toko',
+        'tanggal_pengantaran',
+        'foto_roti',
+
+        'coklat_masuk',
+        'srikaya_masuk',
+        'strawberry_masuk',
+        'kacang_masuk',
+        'coklat_kacang_masuk',
+        'coklat_strawberry_masuk',
+        'mocca_masuk',
+        'kopi_masuk',
+        'keju_masuk',
     ];
 
-
+    /** Relasi ke Toko */
     public function store()
     {
-        return $this->belongsTo(Store::class);
+        return $this->belongsTo(Store::class, 'nama_toko', 'name');
+    }
+
+    /** Relasi ke Sisa Roti */
+    public function sisa()
+    {
+        return $this->hasOne(SisaRoti::class, 'stok_roti_id');
     }
 }

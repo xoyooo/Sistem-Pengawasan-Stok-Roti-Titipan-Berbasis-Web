@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Sales - Input Stok Harian')
+@section('title', 'Sales - Input Sisa Roti')
 
 @section('content')
 <div class="flex flex-col min-h-screen bg-[#fffcf0] px-6 md:px-12 py-8">
@@ -8,10 +8,14 @@
     <!-- Header -->
     <div class="bg-[#fffcf0] text-gray-900 px-6 py-3 rounded-t-xl shadow-sm flex items-center gap-2 mb-6">
         <i class="fa-solid fa-bread-slice text-lg"></i>
-        <h2 class="text-lg md:text-xl font-semibold tracking-wide">Input Stok Baru</h2>
+        <h2 class="text-lg md:text-xl font-semibold tracking-wide">Input Sisa Roti</h2>
     </div>
 
-    <form action="{{ route('sales.stok.store') }}" method="POST" enctype="multipart/form-data" class="animate-fade-in space-y-8">
+    <form action="{{ route('sales.sisa.store') }}" 
+          method="POST" 
+          enctype="multipart/form-data" 
+          class="animate-fade-in space-y-8">
+
         @csrf
 
         <!-- PILIH TOKO -->
@@ -27,56 +31,45 @@
             </select>
         </div>
 
-        <!-- INPUT JUMLAH ROTI MASUK PER VARIAN -->
+        <!-- INPUT SISA ROTI PER VARIAN -->
         <div>
-            <label class="block text-gray-700 font-semibold mb-2">Jumlah Roti Masuk Per Rasa</label>
+            <label class="block text-gray-700 font-semibold mb-2">Jumlah Sisa Roti Per Rasa</label>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                @php
-                    $variants = [
-                        'coklat',
-                        'srikaya',
-                        'strawberry',
-                        'kacang',
-                        'coklat_kacang',
-                        'coklat_strawberry',
-                        'mocca',
-                        'kopi',
-                        'keju'
-                    ];
-                @endphp
-
                 @foreach($variants as $v)
-                <div>
-                    <label class="text-gray-700 capitalize">{{ str_replace('_', ' ', $v) }}</label>
-                    <input type="number" name="{{ $v . '_masuk' }}" 
-                        class="w-full px-4 py-2 border-2 border-yellow-400 rounded-lg bg-[#fffcee] transition"
-                        placeholder="Jumlah masuk" required>
-                </div>
+                    @php $label = str_replace('_', ' ', ucfirst($v)); @endphp
+                    <div>
+                        <label class="text-gray-700 capitalize">{{ $label }}</label>
+                        <input type="number" 
+                               name="{{ $v . '_sisa' }}"
+                               class="w-full px-4 py-2 border-2 border-yellow-400 rounded-lg bg-[#fffcee] transition"
+                               placeholder="Jumlah sisa" 
+                               required>
+                    </div>
                 @endforeach
-
             </div>
         </div>
 
-        <!-- FOTO ROTI -->
+        <!-- FOTO SISA -->
         <div>
-            <label class="block text-gray-700 font-semibold mb-2">Foto Roti Masuk</label>
-            <label for="foto_roti" id="uploadRotiArea"
+            <label class="block text-gray-700 font-semibold mb-2">Foto Roti Sisa</label>
+            <label for="foto_sisa" id="uploadSisaArea"
                 class="border-2 border-dashed border-yellow-400 rounded-lg p-8 text-center bg-yellow-50 hover:bg-yellow-100 cursor-pointer transition block">
                 <i class="fa-solid fa-cloud-arrow-up text-yellow-500 text-4xl mb-2 animate-bounce"></i>
-                <p class="text-gray-700 mb-1 font-medium">Klik atau seret foto roti ke sini</p>
+                <p class="text-gray-700 mb-1 font-medium">Klik atau seret foto sisa roti ke sini</p>
                 <p class="text-gray-400 text-sm">Maksimum size: 2 MB</p>
             </label>
-            <input type="file" name="foto_roti" id="foto_roti" class="hidden" accept="image/*">
-            <div id="file-name" class="text-sm text-gray-600 mt-2"></div>
+            <input type="file" name="foto_sisa" id="foto_sisa" class="hidden" accept="image/*">
+            <div id="file-name-sisa" class="text-sm text-gray-600 mt-2"></div>
         </div>
 
         <!-- TANGGAL -->
         <div>
-            <label class="block text-gray-700 font-semibold mb-2">Tanggal Pengantaran</label>
-            <input type="date" name="tanggal_pengantaran"
-                class="w-full px-4 py-2 border-2 border-yellow-400 rounded-lg bg-[#fffcee] focus:ring-2 focus:ring-yellow-500 transition"
-                required>
+            <label class="block text-gray-700 font-semibold mb-2">Tanggal Pengambilan</label>
+            <input type="date" 
+                   name="tanggal_pengambilan"
+                   class="w-full px-4 py-2 border-2 border-yellow-400 rounded-lg bg-[#fffcee] focus:ring-2 focus:ring-yellow-500 transition"
+                   required>
         </div>
 
         <!-- BUTTON -->
@@ -96,11 +89,6 @@
 </div>
 
 <script src="https://kit.fontawesome.com/a2e0e6adf0.js" crossorigin="anonymous"></script>
-<script src="{{ asset('js/input_stok.js') }}"></script>
-
-<style>
-@keyframes fade-in { from {opacity:0; transform: translateY(8px);} to {opacity:1; transform: translateY(0);} }
-.animate-fade-in { animation: fade-in 0.6s ease-out; }
-</style>
+<script src="{{ asset('js/input_sisa.js') }}"></script>
 
 @endsection

@@ -4,34 +4,35 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use App\Models\StokRoti;
 use App\Models\Store;
 use Carbon\Carbon;
 
-
 class SalesController extends Controller
 {
     /** 🏠 Halaman Home */
-   public function home()
+    public function home()
     {
-    $stores = Store::whereNotNull('latitude')
-        ->whereNotNull('longitude')
-        ->get(['name', 'address', 'latitude', 'longitude']);
+        $salesId = Auth::id();
 
-    return view('sales.home', compact('stores'));
+        // Total Uang Terkumpul
+        $totalPendapatan = \App\Models\SisaRoti::where('user_id', $salesId)->sum('total_bill');
+
+        // Data tabel penjualan
+        $historiPenjualan = \App\Models\SisaRoti::where('user_id', $salesId)
+            ->orderBy('tanggal_pengambilan', 'desc')
+            ->get();
+
+        return view('sales.home', compact('totalPendapatan', 'historiPenjualan'));
     }
 
-
-    /** 🧾 Histori Penjualan */
+    /** 📜 Histori Stok Masuk */
     public function histori()
     {
-        // Ambil sales_id dari user yang login
-        $salesId = Auth::user()->id;
+        $salesId = Auth::id();
 
-        // Ambil data 7 hari terakhir berdasarkan tanggal_pengantaran
-        $histori = StokRoti::with('store')
-            ->where('user_id', $salesId)
-            ->where('tanggal_pengantaran', '>=', Carbon::now()->subDays(7))
+        $histori = StokRoti::where('user_id', $salesId)
             ->orderBy('tanggal_pengantaran', 'desc')
             ->get();
 
@@ -41,59 +42,75 @@ class SalesController extends Controller
     /** 📍 Lokasi Toko */
     public function lokasi()
     {
-        // Ambil semua data toko dari tabel stores
-        $stores = Store::all();
+        $stores = Store::where('sales_id', Auth::id())->get();
         return view('sales.lokasi_toko', compact('stores'));
     }
 
-    /** 📦 Form Input Stok Roti */
+    /** 📦 Form Input Stok */
     public function create()
     {
-        // Ambil daftar toko milik sales yang sedang login
-        $stores = \App\Models\Store::where('sales_id', Auth::id())->get();
+        $stores = Store::where('sales_id', Auth::id())->get();
 
-        return view('sales.input_stok', compact('stores'));
+        // Ambil varian dari kolom stok_rotis
+        $columns = Schema::getColumnListing('stok_rotis');
+        $variants = [];
+        foreach ($columns as $col) {
+            if (str_contains($col, '_masuk')) {
+                $variants[] = str_replace('_masuk', '', $col);
+            }
+        }
+
+        return view('sales.input_stok', compact('stores', 'variants'));
     }
 
-    /** ✅ Simpan Inputan Harian */
+    /** 📝 Simpan Input Stok */
     public function storeStok(Request $request)
     {
-        $request->validate([
+        // Ambil varian otomatis dari database
+        $columns = Schema::getColumnListing('stok_rotis');
+        $variants = [];
+        foreach ($columns as $col) {
+            if (str_contains($col, '_masuk')) {
+                $variants[] = str_replace('_masuk', '', $col);
+            }
+        }
+
+        // Validasi
+        $rules = [
             'nama_toko' => 'required|string|max:255',
-            'jumlah_roti' => 'required|integer|min:1',
-            'jumlah_sisa' => 'required|integer|min:0',
             'tanggal_pengantaran' => 'required|date',
             'foto_roti' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'foto_sisa' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
+        ];
 
-        // ✅ Simpan foto roti
+        foreach ($variants as $v) {
+            $rules[$v . '_masuk'] = 'required|integer|min:0';
+        }
+
+        $request->validate($rules);
+
+        // Upload foto
         $fotoRotiPath = $request->hasFile('foto_roti')
             ? $request->file('foto_roti')->store('uploads/foto_roti', 'public')
             : null;
 
-        // ✅ Simpan foto sisa roti
-        $fotoSisaPath = $request->hasFile('foto_sisa')
-            ? $request->file('foto_sisa')->store('uploads/foto_sisa', 'public')
-            : null;
-
-        // ✅ Simpan ke database
-        StokRoti::create([
+        // Siapkan data simpan
+        $data = [
             'user_id' => Auth::id(),
             'nama_toko' => $request->nama_toko,
-            'jumlah_roti' => $request->jumlah_roti,
-            'jumlah_sisa' => $request->jumlah_sisa,
             'tanggal_pengantaran' => Carbon::parse($request->tanggal_pengantaran)->format('Y-m-d'),
             'foto_roti' => $fotoRotiPath,
-            'foto_sisa' => $fotoSisaPath,
-        ]);
+        ];
+
+        foreach ($variants as $v) {
+            $data[$v . '_masuk'] = $request->input($v . '_masuk', 0);
+        }
+
+        StokRoti::create($data);
 
         return redirect()->route('sales.histori')->with('success', 'Data stok berhasil disimpan!');
     }
 
-    /* ===============================
-       📍 Update Lokasi Toko
-    =============================== */
+    /** 🌍 Update Lokasi Toko */
     public function updateLokasi(Request $request, $id)
     {
         $request->validate([
@@ -109,5 +126,4 @@ class SalesController extends Controller
 
         return redirect()->back()->with('success', 'Lokasi toko berhasil diperbarui!');
     }
-
 }
