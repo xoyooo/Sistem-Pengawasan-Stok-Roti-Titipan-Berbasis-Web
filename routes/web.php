@@ -29,14 +29,25 @@ Route::middleware(['auth', 'role:admin'])
     ->group(function () {
 
         Route::get('/home', [AdminController::class, 'home'])->name('home');
+
+        // DATA SALES
         Route::get('/sales', [AdminController::class, 'sales'])->name('sales');
         Route::post('/sales/tambah', [AdminController::class, 'tambahSales'])->name('sales.tambah');
         Route::delete('/sales/{id}', [AdminController::class, 'hapusSales'])->name('sales.hapus');
+        Route::put('/sales/{id}', [AdminController::class, 'updateSales'])->name('sales.update');
 
+
+        // TOKO
         Route::get('/daftar-toko', [AdminController::class, 'daftarToko'])->name('daftartoko');
+        Route::put('/toko/{id}', [AdminController::class, 'updateToko'])->name('toko.update');
+        Route::delete('/toko/{id}', [AdminController::class, 'hapusToko'])->name('toko.destroy');
+
+        // LOKASI & HISTORI
         Route::get('/lokasi-toko', [AdminController::class, 'lokasiToko'])->name('lokasitoko');
         Route::get('/histori', [AdminController::class, 'histori'])->name('histori');
     });
+
+
 
 /*
 |--------------------------------------------------------------------------

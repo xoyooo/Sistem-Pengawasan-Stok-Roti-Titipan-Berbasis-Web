@@ -4,105 +4,153 @@
 
 @section('content')
 <div class="p-4 sm:p-8">
+
+    {{-- Header --}}
     <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-800 mb-4 sm:mb-0">Daftar Toko</h1>
+
         <a href="{{ route('sales.tambahtoko') }}"
            class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg shadow transition">
-           + Tambah Toko
+            + Tambah Toko
         </a>
     </div>
 
-    {{-- Notifikasi sukses --}}
+    {{-- Notifikasi --}}
     @if (session('success'))
         <div class="mb-4 p-4 bg-green-100 border border-green-300 text-green-800 rounded-lg">
             {{ session('success') }}
         </div>
     @endif
 
-    {{-- Notifikasi error --}}
     @if (session('error'))
         <div class="mb-4 p-4 bg-red-100 border border-red-300 text-red-800 rounded-lg">
             {{ session('error') }}
         </div>
     @endif
 
-    {{-- Tabel daftar toko --}}
-    <div class="bg-white rounded-lg shadow overflow-x-auto">
+
+
+    {{-- ============================= --}}
+    {{--   DESKTOP - TABLE VIEW        --}}
+    {{-- ============================= --}}
+    <div class="hidden sm:block bg-white rounded-lg shadow overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-100">
                 <tr>
-                    <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">No</th>
-                    <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Nama Toko</th>
-                    <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Alamat</th>
-                    <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">No HP</th>
-                    <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Foto</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold uppercase text-gray-700">No</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold uppercase text-gray-700">Nama Toko</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold uppercase text-gray-700">Alamat</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold uppercase text-gray-700">No HP</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold uppercase text-gray-700">Foto</th>
+                    <th class="px-6 py-3 text-center text-xs font-semibold uppercase text-gray-700">Lokasi</th>
                 </tr>
             </thead>
 
             <tbody class="divide-y divide-gray-200">
                 @forelse($stores as $index => $store)
+                    @php
+                        $photos = json_decode($store->photo, true) ?? [];
+                        $firstPhoto = $photos[0] ?? null;
+
+                        // URL Google Maps
+                        $mapUrl = ($store->latitude && $store->longitude)
+                            ? "https://www.google.com/maps/search/?api=1&query={$store->latitude},{$store->longitude}"
+                            : null;
+                    @endphp
+
                     <tr class="hover:bg-gray-50 transition">
-                        <td class="px-4 sm:px-6 py-4 text-sm text-gray-800">{{ $index + 1 }}</td>
-                        <td class="px-4 sm:px-6 py-4 text-sm text-gray-800 font-medium">{{ $store->name }}</td>
-                        <td class="px-4 sm:px-6 py-4 text-sm text-gray-800">{{ $store->address }}</td>
-                        <td class="px-4 sm:px-6 py-4 text-sm text-gray-800">{{ $store->phone }}</td>
-
-                        {{-- Foto Toko dari Storage --}}
-                       <td class="px-4 sm:px-6 py-4 text-sm">
-                            @php
-                                $photos = json_decode($store->photo, true);
-                                $firstPhoto = $photos[0] ?? null;
-                            @endphp
-
+                        <td class="px-6 py-4">{{ $index + 1 }}</td>
+                        <td class="px-6 py-4 font-semibold">{{ $store->name }}</td>
+                        <td class="px-6 py-4">{{ $store->address }}</td>
+                        <td class="px-6 py-4">{{ $store->phone }}</td>
+                        <td class="px-6 py-4">
                             @if($firstPhoto)
-                                <img src="{{ asset('storage/' . $firstPhoto) }}"
-                                    alt="Foto Toko"
-                                    class="w-20 h-20 object-cover rounded-lg shadow">
+                                <img src="{{ asset('storage/'.$firstPhoto) }}"
+                                     class="w-16 h-16 object-cover rounded-md shadow">
                             @else
                                 <span class="text-gray-400">-</span>
                             @endif
                         </td>
 
+                        {{-- Tombol Lokasi --}}
+                        <td class="px-6 py-4 text-center">
+                            @if($mapUrl)
+                                <a href="{{ $mapUrl }}" target="_blank"
+                                   class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-2 rounded-lg shadow text-sm">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </a>
+                            @else
+                                <span class="text-gray-400 text-sm">Tidak Ada</span>
+                            @endif
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">Belum ada data toko.</td>
+                        <td colspan="6" class="text-center py-4 text-gray-500">Belum ada data toko.</td>
                     </tr>
                 @endforelse
             </tbody>
-
         </table>
     </div>
+
+
+
+
+    {{-- ============================= --}}
+    {{--   MOBILE - CARD VIEW         --}}
+    {{-- ============================= --}}
+    <div class="block sm:hidden space-y-4 mt-4">
+        @forelse($stores as $store)
+
+            @php
+                $photos = json_decode($store->photo, true) ?? [];
+                $firstPhoto = $photos[0] ?? null;
+
+                $mapUrl = ($store->latitude && $store->longitude)
+                    ? "https://www.google.com/maps/search/?api=1&query={$store->latitude},{$store->longitude}"
+                    : null;
+            @endphp
+
+            <div class="bg-white shadow rounded-lg p-4">
+
+                {{-- Foto --}}
+                <div class="flex justify-center mb-3">
+                    @if($firstPhoto)
+                        <img src="{{ asset('storage/'.$firstPhoto) }}"
+                             class="w-24 h-24 object-cover rounded-lg shadow">
+                    @else
+                        <div class="w-24 h-24 flex items-center justify-center bg-gray-200 text-gray-500 rounded-lg">
+                            No Photo
+                        </div>
+                    @endif
+                </div>
+
+                {{-- Info --}}
+                <div class="space-y-1 text-sm text-gray-700">
+                    <p><span class="font-semibold">Nama Toko:</span> {{ $store->name }}</p>
+                    <p><span class="font-semibold">Alamat:</span> {{ $store->address }}</p>
+                    <p><span class="font-semibold">No HP:</span> {{ $store->phone }}</p>
+                </div>
+
+                {{-- Tombol Lokasi --}}
+                <div class="mt-3">
+                    @if ($mapUrl)
+                        <a href="{{ $mapUrl }}" target="_blank"
+                           class="block w-full bg-yellow-400 hover:bg-yellow-500 text-white py-2 rounded-lg text-center shadow">
+                            <i class="fa-solid fa-location-dot mr-1"></i>
+                            Lihat Lokasi
+                        </a>
+                    @else
+                        <p class="text-center text-gray-400 text-sm">Lokasi tidak tersedia</p>
+                    @endif
+                </div>
+
+            </div>
+
+        @empty
+            <p class="text-center text-gray-500">Belum ada toko ditambahkan.</p>
+        @endforelse
+    </div>
+
 </div>
-
-{{-- SweetAlert --}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-document.querySelectorAll('.delete-btn').forEach(button => {
-    button.addEventListener('click', function () {
-        const form = this.closest('form');
-        const storeName = this.dataset.name;
-
-        Swal.fire({
-            icon: 'warning',
-            title: 'Hapus Toko?',
-            html: `Yakin ingin menghapus toko "<strong>${storeName}</strong>"?`,
-            showCancelButton: true,
-            confirmButtonText: 'Ya, hapus',
-            cancelButtonText: 'Batal',
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#6c757d',
-            customClass: {
-                popup: 'rounded-xl',
-                confirmButton: 'px-4 py-2 rounded-lg font-semibold',
-                cancelButton: 'px-4 py-2 rounded-lg font-semibold'
-            }
-        }).then(result => {
-            if (result.isConfirmed) {
-                form.submit();
-            }
-        });
-    });
-});
-</script>
 @endsection

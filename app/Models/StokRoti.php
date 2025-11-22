@@ -39,4 +39,10 @@ class StokRoti extends Model
     {
         return $this->hasOne(SisaRoti::class, 'stok_roti_id');
     }
+
+    public function user()
+{
+    return $this->belongsTo(\App\Models\User::class, 'user_id');
+}
+
 }

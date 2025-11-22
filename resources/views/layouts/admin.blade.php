@@ -5,138 +5,150 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@yield('title', 'Admin - App')</title>
 
-    <!-- Tailwind via CDN -->
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <style>
-      .app-bg { background-color: #f3f4f6; }
-      .sidebar-bg { background-color: #eef2f6; }
-      .brand-green { background-color: #4CAF50; }
-      .card-white { background: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-      .nav-active { background-color: #4CAF50; color: white; }
-      .sidebar-transition { transition: transform 0.3s ease-in-out; }
-      #mobile-sidebar.hidden { display: none; }
-      #mobile-sidebar:not(.hidden) { display: block; }
-    </style>
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
 </head>
-<body class="app-bg min-h-screen">
 
-  <div class="flex flex-col h-screen">
+<body class="min-h-screen bg-gray-100">
 
-    <!-- HEADER -->
-    <header class="brand-green text-white px-4 md:px-8 py-6 md:py-8 flex items-center justify-between sticky top-0 z-50 shadow-lg">
-      <div class="flex items-center gap-3 md:gap-4">
-        <button id="burger" class="md:hidden p-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-          </svg>
-        </button>
-        <span class="text-lg md:text-2xl font-bold">Logo</span>
-      </div>
-      <span class="text-lg md:text-2xl font-semibold">Admin</span>
+    <!-- ======================= -->
+    <!-- HEADER MOBILE (FIXED) -->
+    <!-- ======================= -->
+    <header class="md:hidden w-full bg-yellow-400 px-4 py-3 flex justify-between items-center shadow z-30">
+        <!-- Left -->
+        <div class="flex items-center gap-3">
+            <button id="burger"
+                class="p-2 bg-yellow-300 rounded-lg shadow active:scale-95 transition">
+                <i class="fa-solid fa-bars text-gray-800 text-lg"></i>
+            </button>
+
+            <div>
+                <h1 class="font-bold text-base text-gray-900">Toko Roti Akbar</h1>
+                <p class="text-xs uppercase text-gray-700 tracking-wider">ADMIN</p>
+            </div>
+        </div>
+
+        <!-- Right -->
+        <div class="p-2 bg-yellow-300 rounded-full shadow">
+            <i class="fa-solid fa-user text-gray-800"></i>
+        </div>
     </header>
 
-    <!-- BODY -->
-    <div class="flex flex-1 overflow-hidden">
+    <!-- Wrapper -->
+    <div class="flex flex-col h-screen">
 
-      <!-- SIDEBAR DESKTOP -->
-      <aside class="sidebar-bg w-full md:w-64 p-4 md:p-6 hidden md:flex md:flex-col border-r border-gray-300 overflow-y-auto">
-        <div class="mb-6 pb-4 border-b border-gray-300">
-          <h2 class="text-lg md:text-xl font-bold text-gray-800">Menu</h2>
+        <!-- ======================= -->
+        <!-- SIDEBAR DESKTOP (SAMA SEPERTI SALES) -->
+        <!-- ======================= -->
+        <aside id="sidebar" class="sidebar-bg z-20">
+            <div class="sidebar-header text-center py-5 border-b border-yellow-300 shadow-sm bg-yellow-400">
+                <h1 class="font-bold text-lg text-gray-900">Toko Roti Akbar</h1>
+                <p class="text-xs tracking-widest text-gray-800">ADMIN</p>
+            </div>
+
+            <nav class="flex-1 mt-3">
+
+                <a href="{{ route('admin.home') }}"
+                   class="nav-link {{ request()->routeIs('admin.home') ? 'nav-active' : '' }}">
+                  <i class="fa-solid fa-house"></i> <span>Home</span>
+                </a>
+
+                <a href="{{ route('admin.histori') }}"
+                   class="nav-link {{ request()->routeIs('admin.histori') ? 'nav-active' : '' }}">
+                  <i class="fa-solid fa-clock-rotate-left"></i> <span>Histori</span>
+                </a>
+
+                <a href="{{ route('admin.sales') }}"
+                   class="nav-link {{ request()->routeIs('admin.sales*') ? 'nav-active' : '' }}">
+                  <i class="fa-solid fa-users"></i> <span>Sales</span>
+                </a>
+
+                <a href="{{ route('admin.daftartoko') }}"
+                   class="nav-link {{ request()->routeIs('admin.daftartoko') ? 'nav-active' : '' }}">
+                  <i class="fa-solid fa-store"></i> <span>Daftar Toko</span>
+                </a>
+
+                <a href="{{ route('admin.lokasitoko') }}"
+                   class="nav-link {{ request()->routeIs('admin.lokasitoko') ? 'nav-active' : '' }}">
+                  <i class="fa-solid fa-location-dot"></i> <span>Lokasi Toko</span>
+                </a>
+
+                <form action="{{ route('logout') }}" method="POST" class="mt-auto mb-4 text-center">
+                  @csrf
+                  <button type="submit" class="logout-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                  </button>
+                </form>
+
+            </nav>
+        </aside>
+
+        <!-- ======================= -->
+        <!-- SIDEBAR MOBILE -->
+        <!-- ======================= -->
+        <div id="mobile-sidebar" class="z-30">
+            <div class="panel">
+                <div class="flex justify-between items-center p-4 bg-yellow-300 border-b border-yellow-400">
+                    <h2 class="font-bold text-gray-800 text-lg">Menu</h2>
+                    <button id="closeSidebar" class="text-gray-800 text-xl">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <nav class="p-3 flex-1">
+                    <a href="{{ route('admin.home') }}" class="nav-link {{ request()->routeIs('admin.home') ? 'nav-active' : '' }}">
+                        <i class="fa-solid fa-house"></i> Home
+                    </a>
+
+                    <a href="{{ route('admin.histori') }}" class="nav-link {{ request()->routeIs('admin.histori') ? 'nav-active' : '' }}">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Histori
+                    </a>
+
+                    <a href="{{ route('admin.sales') }}" class="nav-link {{ request()->routeIs('admin.sales*') ? 'nav-active' : '' }}">
+                        <i class="fa-solid fa-users"></i> Sales
+                    </a>
+
+                    <a href="{{ route('admin.daftartoko') }}" class="nav-link {{ request()->routeIs('admin.daftartoko') ? 'nav-active' : '' }}">
+                        <i class="fa-solid fa-store"></i> Daftar Toko
+                    </a>
+
+                    <a href="{{ route('admin.lokasitoko') }}" class="nav-link {{ request()->routeIs('admin.lokasitoko') ? 'nav-active' : '' }}">
+                        <i class="fa-solid fa-location-dot"></i> Lokasi Toko
+                    </a>
+
+                    <div class="mt-4 border-t border-yellow-300 pt-3">
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="logout-btn">
+                                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                </nav>
+            </div>
         </div>
 
-        <nav class="space-y-1 md:space-y-2 flex-1">
-          <a href="{{ route('admin.home') }}" class="flex items-center gap-3 px-3 py-2 md:py-3 rounded-lg text-sm md:text-base transition-colors {{ request()->routeIs('admin.home') ? 'nav-active' : 'text-gray-700 hover:bg-white/50' }}">
-            <span class="text-lg">🏠</span><span>Home</span>
-          </a>
-
-          <a href="{{ route('sales.histori') }}" class="flex items-center gap-3 px-3 py-2 md:py-3 rounded-lg text-sm md:text-base transition-colors {{ request()->routeIs('sales.histori') ? 'nav-active' : 'text-gray-700 hover:bg-white/50' }}">
-            <span class="text-lg">📜</span>
-            <span>Histori</span>
-          </a>
-
-          <a href="{{ route('admin.sales') }}" class="flex items-center gap-3 px-3 py-2 md:py-3 rounded-lg text-sm md:text-base transition-colors {{ request()->routeIs('admin.sales.*') ? 'nav-active' : 'text-gray-700 hover:bg-white/50' }}">
-            <span class="text-lg">👥</span><span>Sales</span>
-          </a>
-
-          <a href="{{ route('admin.daftartoko') }}" class="flex items-center gap-3 px-3 py-2 md:py-3 rounded-lg text-sm md:text-base transition-colors {{ request()->routeIs('admin.stores') ? 'nav-active' : 'text-gray-700 hover:bg-white/50' }}">
-            <span class="text-lg">🏪</span><span>Daftar Toko</span>
-          </a>
-
-          <a href="{{ route('admin.lokasitoko') }}" class="flex items-center gap-3 px-3 py-2 md:py-3 rounded-lg text-sm md:text-base transition-colors {{ request()->routeIs('admin.locations') ? 'nav-active' : 'text-gray-700 hover:bg-white/50' }}">
-            <span class="text-lg">📍</span><span>Lokasi Toko</span>
-          </a>
-
-          <form action="{{ route('logout') }}" method="POST" class="pt-4 border-t border-green-600">
-            @csrf
-            <button type="submit" class="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 transition">
-              Logout
-            </button>
-          </form>
-        </nav>
-      </aside>
-
-      <!-- SIDEBAR MOBILE -->
-      <div id="mobile-sidebar" class="md:hidden hidden bg-white border-r border-gray-200 shadow-sm w-64 overflow-y-auto">
-        <div class="p-4 border-b border-gray-300">
-          <h2 class="text-lg font-bold text-gray-800">Logo</h2>
-        </div>
-
-        <nav class="space-y-1 p-3 md:p-4">
-          <a href="{{ route('admin.home') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('admin.home') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
-            <span class="text-lg">🏠</span><span>Home</span>
-          </a>
-
-          <a href="{{ route('sales.histori') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('sales.histori') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
-            <span class="text-lg">📜</span>
-            <span>Histori</span>
-          </a>
-          
-          <a href="{{ route('admin.sales') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('admin.sales.*') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
-            <span class="text-lg">👥</span><span>Sales</span>
-          </a>
-
-          <a href="{{ route('admin.daftartoko') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('admin.stores') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
-            <span class="text-lg">🏪</span><span>Daftar Toko</span>
-          </a>
-
-          <a href="{{ route('admin.lokasitoko') }}" class="flex items-center gap-3 px-3 py-2 rounded text-sm {{ request()->routeIs('admin.locations') ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition-colors">
-            <span class="text-lg">📍</span><span>Lokasi Toko</span>
-          </a>
-
-          <form action="{{ route('logout') }}" method="POST" class="pt-4 border-t border-green-600">
-            @csrf
-            <button type="submit" class="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 transition">
-              Logout
-            </button>
-          </form>
-        </nav>
-      </div>
-
-      <!-- CONTENT -->
-      <main class="flex-1 overflow-auto p-3 md:p-6">
-        <div class="max-w-6xl mx-auto">
-          @yield('content')
-        </div>
-      </main>
+        <!-- ======================= -->
+        <!-- CONTENT -->
+        <!-- ======================= -->
+        <main class="flex-1 overflow-auto p-3 md:p-6 pt-20 md:pt-6">
+            <div class="max-w-6xl mx-auto">
+                @yield('content')
+            </div>
+        </main>
 
     </div>
-  </div>
 
-  <script>
-    document.getElementById('burger')?.addEventListener('click', function() {
-      const mob = document.getElementById('mobile-sidebar');
-      if (!mob) return;
-      mob.classList.toggle('hidden');
-    });
-    document.querySelectorAll('#mobile-sidebar a').forEach(link => {
-      link.addEventListener('click', function() {
-        document.getElementById('mobile-sidebar').classList.add('hidden');
-      });
-    });
-  </script>
+    @yield('scripts')
+    <script src="{{ asset('js/layout.js') }}"></script>
+
 </body>
 </html>

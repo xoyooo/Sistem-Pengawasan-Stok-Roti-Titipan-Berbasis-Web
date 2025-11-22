@@ -10,26 +10,20 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
-    /**
-     * 🔹 Halaman utama admin
-     */
     public function home()
     {
         return view('admin.home');
     }
 
-    /**
-     * 🔹 Menampilkan daftar akun sales
-     */
+    // =============================
+    // SALES
+    // =============================
     public function sales()
     {
         $sales = User::where('role', 'sales')->latest()->get();
         return view('admin.sales', compact('sales'));
     }
 
-    /**
-     * 🔹 Menambahkan akun sales baru
-     */
     public function tambahSales(Request $request)
     {
         $request->validate([
@@ -43,6 +37,7 @@ class AdminController extends Controller
             'name'     => $request->name,
             'username' => $request->username,
             'password' => Hash::make($request->password),
+            'plain_password' => $request->password, // >>> SIMPAN PASSWORD ASLI
             'phone'    => $request->phone,
             'role'     => 'sales',
         ]);
@@ -50,16 +45,37 @@ class AdminController extends Controller
         return redirect()->route('admin.sales')->with('success', 'Akun sales berhasil ditambahkan.');
     }
 
-    /**
-     * 🔹 Menghapus akun sales
-     */
+    public function updateSales(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'username' => 'required|string|max:100',
+            'phone' => 'required|string|max:20',
+            'password' => 'nullable|string|min:5',
+        ]);
+
+        $sales = User::findOrFail($id);
+
+        $sales->name = $request->name;
+        $sales->username = $request->username;
+        $sales->phone = $request->phone;
+
+        if ($request->password) {
+            $sales->password = Hash::make($request->password);
+            $sales->plain_password = $request->password;
+        }
+
+        $sales->save();
+
+        return redirect()->route('admin.sales')->with('success', 'Akun sales berhasil diperbarui.');
+    }
+
     public function hapusSales($id)
     {
         $sales = User::findOrFail($id);
 
-        // Cegah admin menghapus akun dirinya sendiri
         if (Auth::check() && Auth::id() === $sales->id) {
-            return back()->with('error', 'Kamu tidak dapat menghapus akun kamu sendiri.');
+            return back()->with('error', 'Tidak bisa menghapus akun kamu sendiri.');
         }
 
         $sales->delete();
@@ -67,18 +83,40 @@ class AdminController extends Controller
         return redirect()->route('admin.sales')->with('success', 'Akun sales berhasil dihapus.');
     }
 
-    /**
-     * 🔹 Menampilkan daftar toko
-     */
+    // =============================
+    // TOKO
+    // =============================
     public function daftarToko()
     {
         $stores = Store::latest()->get();
         return view('admin.daftar_toko', compact('stores'));
     }
 
-    /**
-     * 🔹 Menampilkan peta lokasi toko
-     */
+    public function updateToko(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'address' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+        ]);
+
+        $store = Store::findOrFail($id);
+        $store->update($request->only('name', 'address', 'phone'));
+
+        return redirect()->route('admin.daftartoko')->with('success', 'Toko berhasil diperbarui.');
+    }
+
+    public function hapusToko($id)
+    {
+        $store = Store::findOrFail($id);
+        $store->delete();
+
+        return redirect()->route('admin.daftartoko')->with('success', 'Toko berhasil dihapus.');
+    }
+
+    // =============================
+    // LOKASI TOKO
+    // =============================
     public function lokasiToko()
     {
         $stores = Store::whereNotNull('latitude')
@@ -88,11 +126,16 @@ class AdminController extends Controller
         return view('admin.lokasi_toko', compact('stores'));
     }
 
-    /**
-     * 🔹 Menampilkan histori (sementara kosong)
-     */
-    public function histori()
-    {
-        return view('admin.histori');
-    }
+ public function histori()
+{
+    $histori = \App\Models\StokRoti::with('user')
+        ->where('tanggal_pengantaran', '>=', now()->subDays(7))
+        ->orderBy('tanggal_pengantaran', 'desc')
+        ->get();
+
+    return view('admin.histori', compact('histori'));
+}
+
+
+
 }
