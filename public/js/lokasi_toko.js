@@ -19,22 +19,42 @@ document.addEventListener("DOMContentLoaded", function () {
     // Tambahkan marker untuk setiap toko
     stores.forEach((store) => {
         if (store.latitude && store.longitude) {
-            const marker = L.marker([store.latitude, store.longitude]).addTo(
-                map
-            );
-            marker.bindPopup(
-                `<div style='font-size:14px'>
+
+            // URL Google Maps Direction
+            const mapUrl =
+                `https://www.google.com/maps/dir/?api=1&destination=${store.latitude},${store.longitude}`;
+
+            // Popup HTML
+            const popupHtml = `
+                <div style='font-size:14px; line-height:1.4'>
                     <b>${store.name}</b><br>
-                    ${store.address ?? "Alamat tidak tersedia"}
-                </div>`
-            );
+                    ${store.address ?? "Alamat tidak tersedia"}<br><br>
+
+                    <a href="${mapUrl}" target="_blank"
+                        style="
+                            display:inline-block;
+                            background:#facc15;
+                            padding:6px 12px;
+                            color:#000;
+                            border-radius:8px;
+                            font-weight:bold;
+                            text-decoration:none;
+                            box-shadow:0 2px 5px rgba(0,0,0,0.25);
+                        ">
+                        🚗 Arahkan
+                    </a>
+                </div>
+            `;
+
+            const marker = L.marker([store.latitude, store.longitude]).addTo(map);
+            marker.bindPopup(popupHtml);
         }
     });
 
-    // Auto zoom agar semua marker toko terlihat
+    // Auto zoom agar semua marker terlihat
     const markers = stores
-        .filter((s) => s.latitude && s.longitude)
-        .map((s) => L.marker([s.latitude, s.longitude]));
+        .filter(s => s.latitude && s.longitude)
+        .map(s => L.marker([s.latitude, s.longitude]));
     const group = L.featureGroup(markers);
 
     if (group.getLayers().length > 0) {
@@ -51,15 +71,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Tambahkan marker lokasi pengguna
                 const userMarker = L.marker([userLat, userLng], {
                     icon: L.icon({
-                        iconUrl:
-                            "https://cdn-icons-png.flaticon.com/512/64/64113.png",
+                        iconUrl: "https://cdn-icons-png.flaticon.com/512/64/64113.png",
                         iconSize: [32, 32],
                         iconAnchor: [16, 32],
                         popupAnchor: [0, -30],
                     }),
                 }).addTo(map);
 
-                userMarker.bindPopup("<b>Lokasi Anda Saat Ini</b>").openPopup();
+                userMarker.bindPopup("<b>Lokasi Anda Saat Ini</b>");
 
                 // Fokuskan peta ke lokasi pengguna
                 map.setView([userLat, userLng], 14);

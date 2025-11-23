@@ -12,32 +12,130 @@ use Carbon\Carbon;
 class SalesController extends Controller
 {
     /** 🏠 Halaman Home */
-    public function home()
+    public function home(Request $request)
     {
         $salesId = Auth::id();
 
-        // Total Uang Terkumpul
-        $totalPendapatan = \App\Models\SisaRoti::where('user_id', $salesId)->sum('total_bill');
+        // Filter tampilan (untuk tabel & total pendapatan)
+        $filter = $request->filter ?? 'semua';
 
-        // Data tabel penjualan
-        $historiPenjualan = \App\Models\SisaRoti::where('user_id', $salesId)
-            ->orderBy('tanggal_pengambilan', 'desc')
-            ->get();
+        $query = \App\Models\SisaRoti::where('user_id', $salesId);
 
-        return view('sales.home', compact('totalPendapatan', 'historiPenjualan'));
+        if ($filter === 'hari') {
+            $query->whereDate('tanggal_pengambilan', today());
+        }
+        elseif ($filter === 'minggu') {
+            $query->where('tanggal_pengambilan', '>=', now()->subDays(7));
+        }
+        elseif ($filter === 'bulan') {
+            $query->where('tanggal_pengambilan', '>=', now()->subDays(30));
+        }
+
+        $historiPenjualan = $query->orderBy('tanggal_pengambilan', 'desc')->get();
+        $totalPendapatan = $historiPenjualan->sum('total_bill');
+
+        // =======================================================
+        //  TARGET SALES BULAN INI (tidak terpengaruh filter)
+        // =======================================================
+        $bulanSekarang = now()->format('Y-m');
+
+        $target = \App\Models\SalesTarget::firstOrCreate(
+            [
+                'user_id' => $salesId,
+                'bulan'   => $bulanSekarang
+            ],
+            [
+                'target_bulanan' => 0,
+                'tercapai'       => 0
+            ]
+        );
+
+        // hitung total pencapaian bulan ini
+        $totalPendapatanBulanIni = \App\Models\SisaRoti::where('user_id', $salesId)
+            ->whereYear('tanggal_pengambilan', now()->year)
+            ->whereMonth('tanggal_pengambilan', now()->month)
+            ->sum('total_bill');
+
+        // update value agar bisa dipakai di blade
+        $target->tercapai = $totalPendapatanBulanIni;
+        $target->sisa_target = max($target->target_bulanan - $totalPendapatanBulanIni, 0);
+
+        return view('sales.home', compact(
+            'totalPendapatan',
+            'historiPenjualan',
+            'filter',
+            'target'
+        ));
     }
 
-    /** 📜 Histori Stok Masuk */
-    public function histori()
+
+
+    /** 📜 Histori Stok Masuk + Penjualan */
+    public function histori(Request $request)
     {
         $salesId = Auth::id();
 
-        $histori = StokRoti::where('user_id', $salesId)
+        // Ambil filter waktu dari request
+        // nilai default "minggu" (7 hari terakhir)
+        $filter = $request->filter ?? 'minggu';
+
+        // Query stok masuk
+        $queryMasuk = StokRoti::where('user_id', $salesId);
+
+        // Query histori penjualan
+        $queryPenjualan = \App\Models\SisaRoti::where('user_id', $salesId);
+
+
+        /* ===============================================================
+        FILTER TANGGAL
+        =============================================================== */
+        if ($filter === 'hari') {
+            // hanya hari ini
+            $queryMasuk->whereDate('tanggal_pengantaran', today());
+            $queryPenjualan->whereDate('tanggal_pengambilan', today());
+        }
+        elseif ($filter === 'minggu') {
+            // 7 hari terakhir
+            $queryMasuk->where('tanggal_pengantaran', '>=', now()->subDays(7));
+            $queryPenjualan->where('tanggal_pengambilan', '>=', now()->subDays(7));
+        }
+        elseif ($filter === 'bulan') {
+            // 30 hari terakhir
+            $queryMasuk->where('tanggal_pengantaran', '>=', now()->subDays(30));
+            $queryPenjualan->where('tanggal_pengambilan', '>=', now()->subDays(30));
+        }
+        // jika "semua", tidak ada filter tanggal
+
+
+        /* ===============================================================
+        FILTER NAMA TOKO
+        =============================================================== */
+        if ($request->toko) {
+            $search = $request->toko;
+
+            $queryMasuk->where('nama_toko', 'like', "%$search%");
+            $queryPenjualan->where('nama_toko', 'like', "%$search%");
+        }
+
+
+        /* ===============================================================
+        AMBIL DATA AKHIR
+        =============================================================== */
+        $historiMasuk = $queryMasuk
             ->orderBy('tanggal_pengantaran', 'desc')
             ->get();
 
-        return view('sales.histori', compact('histori'));
+        $historiPenjualan = $queryPenjualan
+            ->orderBy('tanggal_pengambilan', 'desc')
+            ->get();
+
+
+        /* ===============================================================
+        KIRIM KE VIEW
+        =============================================================== */
+        return view('sales.histori', compact('historiMasuk', 'historiPenjualan'));
     }
+
 
     /** 📍 Lokasi Toko */
     public function lokasi()

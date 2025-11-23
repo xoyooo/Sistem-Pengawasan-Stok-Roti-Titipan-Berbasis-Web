@@ -21,12 +21,14 @@
     @endif
 
 
-    {{-- ============================= --}}
-    {{--   DESKTOP TABLE               --}}
-    {{-- ============================= --}}
+    {{-- =============================
+        DESKTOP TABLE
+    ============================= --}}
     <div class="hidden sm:block bg-white shadow rounded-lg overflow-x-auto mb-6">
         <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-100">
+            
+            {{-- HEADER KUNING --}}
+            <thead class="bg-yellow-400 text-black">
                 <tr>
                     <th class="px-6 py-3 text-left text-xs uppercase font-semibold">No</th>
                     <th class="px-6 py-3 text-left text-xs uppercase font-semibold">Nama Toko</th>
@@ -67,7 +69,7 @@
                         <td class="px-6 py-4">
                             <div class="flex gap-2 items-center">
 
-                                {{-- Tombol LOKASI --}}
+                                {{-- Tombol Lokasi --}}
                                 @if($mapUrl)
                                     <a href="{{ $mapUrl }}" target="_blank"
                                        class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-2 rounded-md shadow">
@@ -75,26 +77,26 @@
                                     </a>
                                 @endif
 
-                                {{-- Tombol EDIT --}}
+                                {{-- Tombol Edit --}}
                                 <button onclick="openEditModal(
                                         '{{ $store->id }}',
                                         '{{ $store->name }}',
                                         '{{ $store->address }}',
                                         '{{ $store->phone }}'
                                     )"
-                                    class="px-3 py-1 bg-blue-500 text-white rounded-md">
-                                    Edit
+                                    class="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md shadow">
+                                    <i class="fa-solid fa-pen"></i>
                                 </button>
 
-                                {{-- Tombol HAPUS --}}
+                                {{-- Tombol Hapus --}}
                                 <form action="{{ route('admin.toko.destroy', $store->id) }}"
                                       method="POST"
                                       onsubmit="return confirm('Yakin ingin menghapus toko ini?')">
                                     @csrf
                                     @method('DELETE')
 
-                                    <button class="px-3 py-1 bg-red-500 text-white rounded-md">
-                                        Hapus
+                                    <button class="px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md shadow">
+                                        <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </form>
                             </div>
@@ -108,9 +110,9 @@
     </div>
 
 
-    {{-- ============================= --}}
-    {{--   MOBILE CARD VIEW            --}}
-    {{-- ============================= --}}
+    {{-- =============================
+        MOBILE CARD VIEW
+    ============================= --}}
     <div class="block sm:hidden space-y-4">
 
         @foreach ($stores as $store)
@@ -160,7 +162,7 @@
                             '{{ $store->address }}',
                             '{{ $store->phone }}'
                         )"
-                        class="w-1/2 bg-blue-500 text-white py-2 rounded-lg">
+                        class="w-1/2 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg">
                         Edit
                     </button>
 
@@ -170,7 +172,7 @@
                         @csrf
                         @method('DELETE')
 
-                        <button class="w-full bg-red-500 text-white py-2 rounded-lg">
+                        <button class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg">
                             Hapus
                         </button>
                     </form>
@@ -186,9 +188,9 @@
 </div>
 
 
-{{-- ============================= --}}
-{{--   MODAL EDIT                  --}}
-{{-- ============================= --}}
+{{-- =============================
+        MODAL EDIT
+============================= --}}
 <div id="editModal"
      class="fixed inset-0 bg-black/40 hidden justify-center items-center p-4 z-[999]">
 
@@ -221,7 +223,7 @@
                 <input id="edit_phone" name="phone" class="w-full border rounded px-3 py-2">
             </div>
 
-            <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded w-full">
+            <button class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded w-full">
                 Simpan Perubahan
             </button>
         </form>
