@@ -42,11 +42,12 @@
         </div>
     </header>
 
-    <!-- Wrapper -->
+
+    <!-- WRAPPER -->
     <div class="flex flex-col h-screen">
 
         <!-- ======================= -->
-        <!-- SIDEBAR DESKTOP (SAMA SEPERTI SALES) -->
+        <!-- SIDEBAR DESKTOP -->
         <!-- ======================= -->
         <aside id="sidebar" class="sidebar-bg z-20">
             <div class="sidebar-header text-center py-5 border-b border-yellow-300 shadow-sm bg-yellow-400">
@@ -71,6 +72,16 @@
                   <i class="fa-solid fa-users"></i> <span>Sales</span>
                 </a>
 
+                <a href="{{ route('admin.target') }}"
+                    class="nav-link {{ request()->routeIs('admin.target') ? 'nav-active' : '' }}">
+                    <i class="fa-solid fa-bullseye"></i> <span>Target</span>
+                </a>
+
+                <a href="{{ route('admin.statistik') }}"
+                   class="nav-link {{ request()->routeIs('admin.statistik') ? 'nav-active' : '' }}">
+                  <i class="fa-solid fa-chart-column"></i> <span>Statistik</span>
+                </a>
+
                 <a href="{{ route('admin.daftartoko') }}"
                    class="nav-link {{ request()->routeIs('admin.daftartoko') ? 'nav-active' : '' }}">
                   <i class="fa-solid fa-store"></i> <span>Daftar Toko</span>
@@ -91,6 +102,7 @@
             </nav>
         </aside>
 
+
         <!-- ======================= -->
         <!-- SIDEBAR MOBILE -->
         <!-- ======================= -->
@@ -104,25 +116,41 @@
                 </div>
 
                 <nav class="p-3 flex-1">
-                    <a href="{{ route('admin.home') }}" class="nav-link {{ request()->routeIs('admin.home') ? 'nav-active' : '' }}">
+
+                    <a href="{{ route('admin.home') }}"
+                       class="nav-link {{ request()->routeIs('admin.home') ? 'nav-active' : '' }}">
                         <i class="fa-solid fa-house"></i> Home
                     </a>
 
-                    <a href="{{ route('admin.histori') }}" class="nav-link {{ request()->routeIs('admin.histori') ? 'nav-active' : '' }}">
+                    <a href="{{ route('admin.histori') }}"
+                       class="nav-link {{ request()->routeIs('admin.histori') ? 'nav-active' : '' }}">
                         <i class="fa-solid fa-clock-rotate-left"></i> Histori
                     </a>
 
-                    <a href="{{ route('admin.sales') }}" class="nav-link {{ request()->routeIs('admin.sales*') ? 'nav-active' : '' }}">
+                    <a href="{{ route('admin.sales') }}"
+                       class="nav-link {{ request()->routeIs('admin.sales*') ? 'nav-active' : '' }}">
                         <i class="fa-solid fa-users"></i> Sales
                     </a>
+                    
+                    <a href="{{ route('admin.target') }}" class="nav-link {{ request()->routeIs('admin.target') ? 'nav-active' : '' }}">
+                        <i class="fa-solid fa-bullseye"></i> Target
+                    </a>
 
-                    <a href="{{ route('admin.daftartoko') }}" class="nav-link {{ request()->routeIs('admin.daftartoko') ? 'nav-active' : '' }}">
+                    <a href="{{ route('admin.statistik') }}"
+                       class="nav-link {{ request()->routeIs('admin.statistik') ? 'nav-active' : '' }}">
+                        <i class="fa-solid fa-chart-column"></i> Statistik
+                    </a>
+
+                    <a href="{{ route('admin.daftartoko') }}"
+                       class="nav-link {{ request()->routeIs('admin.daftartoko') ? 'nav-active' : '' }}">
                         <i class="fa-solid fa-store"></i> Daftar Toko
                     </a>
 
-                    <a href="{{ route('admin.lokasitoko') }}" class="nav-link {{ request()->routeIs('admin.lokasitoko') ? 'nav-active' : '' }}">
+                    <a href="{{ route('admin.lokasitoko') }}"
+                       class="nav-link {{ request()->routeIs('admin.lokasitoko') ? 'nav-active' : '' }}">
                         <i class="fa-solid fa-location-dot"></i> Lokasi Toko
                     </a>
+
 
                     <div class="mt-4 border-t border-yellow-300 pt-3">
                         <form action="{{ route('logout') }}" method="POST">
@@ -132,6 +160,7 @@
                             </button>
                         </form>
                     </div>
+
                 </nav>
             </div>
         </div>

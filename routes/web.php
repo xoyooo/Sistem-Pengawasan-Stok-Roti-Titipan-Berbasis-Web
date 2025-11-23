@@ -30,11 +30,15 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::get('/home', [AdminController::class, 'home'])->name('home');
 
-        // DATA SALES
+        // SALES
         Route::get('/sales', [AdminController::class, 'sales'])->name('sales');
         Route::post('/sales/tambah', [AdminController::class, 'tambahSales'])->name('sales.tambah');
-        Route::delete('/sales/{id}', [AdminController::class, 'hapusSales'])->name('sales.hapus');
         Route::put('/sales/{id}', [AdminController::class, 'updateSales'])->name('sales.update');
+        Route::delete('/sales/{id}', [AdminController::class, 'hapusSales'])->name('sales.hapus');
+        
+        // TARGET
+        Route::get('/target', [AdminController::class, 'target'])->name('target');
+        Route::post('/target/update', [AdminController::class, 'updateTarget'])->name('target.update');
 
 
         // TOKO
@@ -45,9 +49,10 @@ Route::middleware(['auth', 'role:admin'])
         // LOKASI & HISTORI
         Route::get('/lokasi-toko', [AdminController::class, 'lokasiToko'])->name('lokasitoko');
         Route::get('/histori', [AdminController::class, 'histori'])->name('histori');
+
+        // 📊 ➜ STATISTIK BARU
+        Route::get('/statistik', [AdminController::class, 'statistik'])->name('statistik');
     });
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -63,7 +68,7 @@ Route::middleware(['auth', 'role:sales'])
         Route::get('/histori', [SalesController::class, 'histori'])->name('histori');
         Route::get('/lokasi', [SalesController::class, 'lokasi'])->name('lokasi');
 
-        // INPUT STOK ROTI (ROTI MASUK)
+        // INPUT STOK ROTI
         Route::get('/input-stok', [SalesController::class, 'create'])->name('input');
         Route::post('/input-stok', [SalesController::class, 'storeStok'])->name('stok.store');
 
@@ -71,9 +76,9 @@ Route::middleware(['auth', 'role:sales'])
         Route::get('/input-sisa', [SalesSisaController::class, 'create'])->name('sisa.create');
         Route::post('/input-sisa', [SalesSisaController::class, 'store'])->name('sisa.store');
 
-        // CRUD TOKO
+        // CRUD TOKO (Sales hanya mengelola toko mereka)
         Route::get('/daftar-toko', [StoreController::class, 'index'])->name('daftartoko');
-        Route::get('/tambah-toko', [StoreController::class, 'create'])->name('tambahtoko');
         Route::post('/tambah-toko', [StoreController::class, 'store'])->name('store');
+        Route::get('/tambah-toko', [StoreController::class, 'create'])->name('tambahtoko');
         Route::delete('/toko/{id}', [StoreController::class, 'destroy'])->name('toko.destroy');
     });

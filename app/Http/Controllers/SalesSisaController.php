@@ -41,7 +41,6 @@ class SalesSisaController extends Controller
             }
         }
 
-        // Validasi input
         $rules = [
             'nama_toko' => 'required|string|max:255',
             'tanggal_pengambilan' => 'required|date',
@@ -56,7 +55,6 @@ class SalesSisaController extends Controller
 
         $tanggalAmbil = Carbon::parse($request->tanggal_pengambilan)->format('Y-m-d');
 
-        // Ambil stok terakhir sebelum tanggal pengambilan
         $stok = StokRoti::where('user_id', Auth::id())
             ->where('nama_toko', $request->nama_toko)
             ->whereDate('tanggal_pengantaran', '<', $tanggalAmbil)
@@ -69,14 +67,12 @@ class SalesSisaController extends Controller
             )->withInput();
         }
 
-        // Cegah duplikasi input untuk stok yang sama
         if (SisaRoti::where('stok_roti_id', $stok->id)->exists()) {
             return back()->with('error',
                 "⚠ Sisa roti untuk stok ini sudah pernah diinput sebelumnya!"
             )->withInput();
         }
 
-        // Upload Foto
         $fotoSisaPath = $request->hasFile('foto_sisa')
             ? $request->file('foto_sisa')->store('foto_sisa', 'public')
             : null;
@@ -92,7 +88,6 @@ class SalesSisaController extends Controller
         $hargaSatuan = 1700;
         $totalBill = 0;
 
-        // Hitung terjual + Validasi sisa vs stok masuk
         foreach ($variants as $v) {
             $stokMasuk = $stok->{$v . '_masuk'} ?? 0;
             $stokSisa = $request->input($v . '_sisa', 0);
@@ -121,6 +116,33 @@ class SalesSisaController extends Controller
             : "Data sisa berhasil disimpan! Tidak ada roti terjual.";
 
         return redirect()->route('sales.home')->with('success', $msg);
+
+        // ================================
+        // UPDATE TARGET SALES OTOMATIS
+        // ================================
+        $bulan = now()->format('Y-m');
+
+        $target = \App\Models\SalesTarget::firstOrCreate(
+            [
+                'user_id' => auth()->id(),
+                'bulan'   => $bulan,
+            ],
+            [
+                'target_bulanan' => 0,
+                'tercapai'       => 0
+            ]
+        );
+
+        // Kurangi target dengan total_bill hari ini
+        $target->target_bulanan = max($target->target_bulanan - $sisa->total_bill, 0);
+
+        // Jika sudah mencapai target
+        if ($target->target_bulanan <= 0) {
+            $target->tercapai = 1;
+        }
+
+        $target->save();
+
     }
 
 }

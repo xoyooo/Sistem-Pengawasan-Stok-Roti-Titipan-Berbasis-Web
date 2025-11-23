@@ -25,13 +25,13 @@
         </div>
     @endif
 
-
     {{-- =============================
-        DESKTOP TABLE
+        DESKTOP TABLE (HEADER KUNING)
     ============================= --}}
     <div class="hidden sm:block overflow-x-auto">
         <table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
-            <thead class="bg-gray-100 text-gray-700">
+
+            <thead class="bg-yellow-400 text-black font-semibold">
                 <tr>
                     <th class="py-3 px-4 text-left">Nama</th>
                     <th class="py-3 px-4 text-left">Username</th>
@@ -43,14 +43,14 @@
 
             <tbody class="text-gray-700">
                 @foreach($sales as $s)
-                <tr class="border-b hover:bg-gray-50 transition">
+                <tr class="border-b hover:bg-yellow-50 transition">
 
                     <td class="py-3 px-4">{{ $s->name }}</td>
                     <td class="py-3 px-4">{{ $s->username }}</td>
 
                     <td class="py-3 px-4">
                         <span id="pw-text-{{ $s->id }}">••••••</span>
-                        <button onclick="togglePassword({{ $s->id }}, '{{ $s->plain_password }}')"
+                        <button onclick="togglePassword({{ $s->id }})"
                                 class="text-blue-500 ml-1">
                             <i class="fa-solid fa-eye"></i>
                         </button>
@@ -61,20 +61,15 @@
                     <td class="py-3 px-4 text-center flex items-center gap-3 justify-center">
 
                         {{-- EDIT --}}
-                        <button onclick="openEditSales(
-                            '{{ $s->id }}',
-                            '{{ $s->name }}',
-                            '{{ $s->username }}',
-                            '{{ $s->phone }}'
-                        )"
-                        class="text-blue-500 hover:text-blue-700">
+                        <button onclick="openEditSales('{{ $s->id }}', '{{ $s->name }}', '{{ $s->username }}', '{{ $s->phone }}')"
+                                class="text-yellow-600 hover:text-yellow-700">
                             <i class="fa-solid fa-pen"></i>
                         </button>
 
                         {{-- HAPUS --}}
                         <form action="{{ route('admin.sales.hapus', $s->id) }}"
-                            method="POST"
-                            onsubmit="deleteConfirm(event)">
+                              method="POST"
+                              onsubmit="deleteConfirm(event)">
                             @csrf
                             @method('DELETE')
                             <button class="text-red-500 hover:text-red-700">
@@ -91,14 +86,13 @@
     </div>
 
 
-
     {{-- =============================
-        MOBILE CARD
+        MOBILE CARD (KUNING)
     ============================= --}}
     <div class="block sm:hidden space-y-4">
 
         @foreach($sales as $s)
-        <div class="bg-white p-4 rounded-lg shadow">
+        <div class="bg-yellow-50 p-4 rounded-lg shadow">
 
             <p><b>Nama:</b> {{ $s->name }}</p>
             <p><b>Username:</b> {{ $s->username }}</p>
@@ -106,8 +100,7 @@
             <p>
                 <b>Password:</b>
                 <span id="m-pw-{{ $s->id }}">••••••</span>
-
-                <button onclick="toggleMobilePassword({{ $s->id }}, '{{ $s->plain_password }}')"
+                <button onclick="toggleMobilePassword({{ $s->id }})"
                         class="text-blue-500 ml-1">
                     <i class="fa-solid fa-eye"></i>
                 </button>
@@ -117,13 +110,8 @@
 
             <div class="flex gap-2 mt-3">
 
-                <button onclick="openEditSales(
-                    '{{ $s->id }}',
-                    '{{ $s->name }}',
-                    '{{ $s->username }}',
-                    '{{ $s->phone }}'
-                )"
-                class="w-1/2 bg-blue-500 text-white py-2 rounded-lg">
+                <button onclick="openEditSales('{{ $s->id }}', '{{ $s->name }}', '{{ $s->username }}', '{{ $s->phone }}')"
+                        class="w-1/2 bg-yellow-400 text-white py-2 rounded-lg">
                     Edit
                 </button>
 
@@ -145,20 +133,17 @@
     </div>
 
 
-
-
     {{-- Floating Add Button --}}
     <div class="fixed bottom-8 right-8">
         <button onclick="document.getElementById('popup').classList.remove('hidden')"
-            class="bg-green-600 text-white p-4 rounded-full shadow-lg hover:bg-green-700">
+            class="bg-yellow-400 text-white p-4 rounded-full shadow-lg hover:bg-yellow-500">
             <i class="fa-solid fa-plus"></i>
         </button>
     </div>
 
 
-
     {{-- =============================
-        POPUP TAMBAH SALES
+        POPUP TAMBAH SALES (KUNING)
     ============================= --}}
     <div id="popup"
         class="hidden fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
@@ -195,7 +180,7 @@
                     <input name="phone" class="w-full border rounded px-3 py-2" required>
                 </div>
 
-                <button class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded">
+                <button class="w-full bg-yellow-400 hover:bg-yellow-500 text-white py-2 rounded">
                     Simpan
                 </button>
 
@@ -206,10 +191,8 @@
     </div>
 
 
-
-
     {{-- =============================
-        POPUP EDIT SALES
+        POPUP EDIT SALES (KUNING)
     ============================= --}}
     <div id="editSalesPopup"
         class="hidden fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
@@ -247,7 +230,7 @@
                     <input id="edit_sales_phone" name="phone" class="w-full border rounded px-3 py-2" required>
                 </div>
 
-                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">
+                <button class="w-full bg-yellow-400 hover:bg-yellow-500 text-white py-2 rounded">
                     Simpan Perubahan
                 </button>
 
@@ -258,24 +241,20 @@
     </div>
 
 
-
 </div>
 
-
-
-
-{{-- ========================================= --}}
-{{-- JAVASCRIPT --}}
-{{-- ========================================= --}}
+{{-- =========================================
+     JAVASCRIPT
+========================================= --}}
 <script>
-function togglePassword(id, pw) {
+function togglePassword(id) {
     const el = document.getElementById("pw-text-" + id);
-    el.innerText = (el.innerText === "••••••") ? pw : "••••••";
+    el.innerText = (el.innerText === "••••••") ? "********" : "••••••";
 }
 
-function toggleMobilePassword(id, pw) {
+function toggleMobilePassword(id) {
     const el = document.getElementById("m-pw-" + id);
-    el.innerText = (el.innerText === "••••••") ? pw : "••••••";
+    el.innerText = (el.innerText === "••••••") ? "********" : "••••••";
 }
 
 function openEditSales(id, name, username, phone) {
@@ -287,8 +266,13 @@ function openEditSales(id, name, username, phone) {
 
     document.getElementById("editSalesPopup").classList.remove("hidden");
 }
-</script>
 
+function deleteConfirm(e) {
+    if(!confirm("Hapus akun sales ini?")) {
+        e.preventDefault();
+    }
+}
+</script>
 
 <style>
 @keyframes fadeIn {
